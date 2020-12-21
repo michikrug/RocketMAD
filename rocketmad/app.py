@@ -1030,7 +1030,7 @@ def create_app():
             evolution = int(request.args.get('evolution', '0'))
             shiny = 'shiny' in request.args
             weather = int(request.args.get('weather', '0'))
-            iv = int(request.args.get('iv', '0'))
+            iv = float(request.args.get('iv', '0'))
             level = int(request.args.get('level', '0'))
 
             # An exception is thrown when values are invalid.

@@ -189,7 +189,7 @@ class ImageGenerator:
         bordercolor = 'black'
         addon = None
         if level > 27:
-            bordercolor = 'darkgreen'
+            bordercolor = 'green'
             addon = 'highlevel'
         if iv >= 89:
             bordercolor = 'red'
@@ -206,8 +206,10 @@ class ImageGenerator:
                 ' -scale "133x133>" -unsharp 0x1'
                 ' -background none -gravity center -extent 139x139'
                 ' -bordercolor none -border 2'
-                ' -background {bcolor} -alpha background'
+                ' -background black -alpha background'
                 ' -channel A -blur 2x2 -level 0,0%'
+                ' -background {bcolor} -alpha background'
+                ' -channel A -blur 2x2 -level 0,10%'
                 ' -background black -alpha background'
                 ' -channel A -blur 0x1 -level 0,10%'
                 ' -adaptive-resize {size}x{size}'
