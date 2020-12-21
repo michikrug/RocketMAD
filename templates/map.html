@@ -1771,7 +1771,7 @@
         function removeAdSpace() {
           const el = document.getElementById('ad-space');
           el.parentNode.removeChild(el);
-          document.getElementsByClassName('with-ads').forEach((e) => e.classList.remove('with-ads'));
+          Array.from(document.getElementsByClassName('with-ads')).forEach((e) => e.classList.remove('with-ads'));
           clearTimeout(reloader);
         }
         var reloader = setTimeout(function() { location.reload(); }, 1800000);
