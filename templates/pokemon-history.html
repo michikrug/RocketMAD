@@ -41,6 +41,7 @@
   </head>
 
   <body>
+    <div class="wrapper" style="height:calc(100% - 60px)">
     <header>
       <div class="navbar-fixed">
         <nav>
@@ -242,6 +243,36 @@
             <div class="circle"></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    </div>
+
+    <div id="ad-space" style="height:60px;width:100%;display:table;overflow:hidden">
+      <script>
+        function removeAdSpace() {
+          var el = document.getElementById('ad-space');
+          el.parentNode.removeChild(el);
+          document.getElementsByClassName('wrapper')[0].style.height = '100%';
+          clearTimeout(reloader);
+        }
+        var reloader = setTimeout(function() { location.reload(); }, 1800000);
+        if (window.outerWidth > window.outerHeight) {
+          removeAdSpace();
+        } else {
+          setTimeout(function() { if (adsbygoogle instanceof Array) removeAdSpace(); }, 5000);
+        }
+      </script>
+      <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+      <!-- Banner Ad -->
+      <div style="display:table-cell;vertical-align:middle;text-align:center;">
+        <ins class="adsbygoogle"
+          style="display:inline-block;width:100%;height:60px"
+          data-full-width-responsive="true"
+          data-ad-client="ca-pub-5312537636379418"
+          data-ad-slot="7370531483"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <div>Platz für Werbung :)</div>
       </div>
     </div>
 
