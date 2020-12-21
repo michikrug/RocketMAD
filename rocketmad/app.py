@@ -131,7 +131,7 @@ def create_app():
                 template_folder='../templates',
                 static_folder='../static')
 
-    app.wsgi_app = ReverseProxied(app.wsgi_app, script_name='/rmap')
+    app.wsgi_app = ReverseProxied(app.wsgi_app, script_name='/map')
 
     app.json_encoder = CustomJSONEncoder
     cache_buster = CacheBuster(config={'extensions': ['.js', '.css']})
