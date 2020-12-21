@@ -81,7 +81,7 @@ function customizePokemonMarker(pokemon, marker, isNotifPokemon) {
 function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
     var level = getPokemonLevel(pokemon.cp_multiplier)
     var iv = getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina)
-    var iconSize = 32 * (settings.pokemonIconSizeModifier / 100)
+    var iconSize = 32 * (settings.pokemonIconSizeModifier / 100) * 1.2
     var upscaleModifier = 1
     if ((isNotifPokemon && settings.upscaleNotifMarkers) || serverSettings.upscaledPokemon.includes(pokemon.pokemon_id)) {
         iconSize *= 1.2
