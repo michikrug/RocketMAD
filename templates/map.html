@@ -554,7 +554,7 @@
     </div>
     {% endif %}
 
-    <ul id="settings-sidenav" class="sidenav collapsible">
+    <ul id="settings-sidenav" class="sidenav with-ads collapsible">
       {% if settings.pokemons %}
       <li>
         <div class="collapsible-header"><i class="material-icons">pets</i>{{ i18n('Pokémon') }}</div>
@@ -1565,7 +1565,7 @@
       </li>
     </ul>
 
-    <ul id="stats-sidenav" class="sidenav">
+    <ul id="stats-sidenav" class="sidenav with-ads">
       <ul id="stats-tabs" class="tabs tabs-fixed-width">
         {% if settings.pokemons %}
         <li class="tab" title="{{ i18n('Pokémon') }}"><a href="#pokemon-stats-tab"><i class="material-icons">pets</i></a></li>
@@ -1666,7 +1666,7 @@
     </ul>
 
     {% if settings.gyms or settings.raids %}
-    <ul id="gym-sidebar" class="sidenav">
+    <ul id="gym-sidebar" class="sidenav with-ads">
       <i class="material-icons sidenav-close">close</i>
       <div class="center-align">
         <h5 id="sidebar-gym-title"></h5>
@@ -1767,9 +1767,9 @@
     <div id="ad-space" style="height:60px;width:100%;overflow:hidden;position:absolute;bottom:0;">
       <script>
         function removeAdSpace() {
-          var el = document.getElementById('ad-space');
+          const el = document.getElementById('ad-space');
           el.parentNode.removeChild(el);
-          document.getElementsByClassName('map-container')[0].classList.remove('with-ads');
+          document.getElementsByClassName('with-ads').forEach((e) => e.classList.remove('with-ads'));
           clearTimeout(reloader);
         }
         var reloader = setTimeout(function() { location.reload(); }, 1800000);
