@@ -183,24 +183,35 @@ class ImageGenerator:
             return self.path_icons / '{}.png'.format(pkm)
 
     def get_pokemon_map_icon(self, pkm, gender=GENDER_UNSET, form=0, costume=0,
-                             evolution=EVOLUTION_UNSET, weather=None):
+                             evolution=EVOLUTION_UNSET, weather=None, iv=0, level=0):
         im_lines = []
+
+        bordercolor = 'black'
+        addon = None
+        if level > 27:
+            bordercolor = 'darkgreen'
+            addon = 'highlevel'
+        if iv >= 89:
+            bordercolor = 'red'
+            addon = 'highiv'
 
         # Add Pokemon icon
         if self.use_pogo_assets:
             source, target = self._pokemon_asset_path(
                 pkm, classifier='marker', gender=gender, form=form,
-                costume=costume, evolution=evolution, weather=weather)
+                costume=costume, evolution=evolution, weather=weather, addon=addon)
             target_size = 96
             im_lines.append(
                 '-fuzz 0.5% -trim +repage'
                 ' -scale "133x133>" -unsharp 0x1'
                 ' -background none -gravity center -extent 139x139'
                 ' -bordercolor none -border 2'
+                ' -background {bcolor} -alpha background'
+                ' -channel A -blur 2x2 -level 0,0%'
                 ' -background black -alpha background'
                 ' -channel A -blur 0x1 -level 0,10%'
                 ' -adaptive-resize {size}x{size}'
-                ' -modulate 100,110'.format(size=target_size)
+                ' -modulate 100,110'.format(size=target_size,bcolor=bordercolor)
             )
         else:
             # Extract pokemon icon from spritesheet
@@ -359,7 +370,7 @@ class ImageGenerator:
 
     def _pokemon_asset_path(self, pkm, classifier=None, gender=GENDER_UNSET,
                             form=0, costume=0, evolution=EVOLUTION_UNSET,
-                            shiny=False, weather=None):
+                            shiny=False, weather=None, addon=None):
         if gender == MALE or gender == FEMALE:
             gender_suffix = gender_form_asset_suffix = (
                 '_{:02d}'.format(gender - 1))
@@ -371,6 +382,7 @@ class ImageGenerator:
         evolution_suffix = '_{:02d}'.format(evolution)
         weather_suffix = ('_{}'.format(weather_names[weather])
                           if weather else '')
+        addon_suffix = ('_{}'.format(addon) if addon else '')
         shiny_suffix = '_shiny' if shiny else ''
 
         should_use_asset_bundle_suffix = False
@@ -413,9 +425,9 @@ class ImageGenerator:
             target_path = path_generated / 'pokemon_{}'.format(classifier)
         else:
             target_path = path_generated / 'pokemon'
-        target_name = target_path / 'pkm_{:03d}{}{}{}{}{}{}.png'.format(
+        target_name = target_path / 'pkm_{:03d}{}{}{}{}{}{}{}.png'.format(
             pkm, gender_suffix, form_suffix, costume_suffix, evolution_suffix,
-            weather_suffix, shiny_suffix)
+            weather_suffix, addon_suffix, shiny_suffix)
 
         if assets_fullname.exists():
             return assets_fullname, target_name
@@ -434,7 +446,7 @@ class ImageGenerator:
                                             gender=MALE, form=form,
                                             costume=costume,
                                             evolution=evolution, shiny=shiny,
-                                            weather=weather,)
+                                            weather=weather, addon=addon)
 
     def _draw_gym_subject(self, image, size, gravity='north', trim=False):
         trim_cmd = ' -fuzz 0.5% -trim +repage' if trim else ''
