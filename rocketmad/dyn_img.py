@@ -196,9 +196,9 @@ class ImageGenerator:
                 '-fuzz 0.5% -trim +repage'
                 ' -scale "133x133>" -unsharp 0x1'
                 ' -background none -gravity center -extent 139x139'
+                ' -bordercolor none -border 2'
                 ' -background black -alpha background'
                 ' -channel A -blur 0x1 -level 0,10%'
-                ' -bordercolor black -border 1'
                 ' -adaptive-resize {size}x{size}'
                 ' -modulate 100,110'.format(size=target_size)
             )
