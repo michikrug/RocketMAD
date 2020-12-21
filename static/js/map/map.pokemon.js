@@ -79,10 +79,12 @@ function customizePokemonMarker(pokemon, marker, isNotifPokemon) {
 }
 
 function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
+    var level = getPokemonLevel(pokemon.cp_multiplier)
+    var iv = getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina)
     var iconSize = 32 * (settings.pokemonIconSizeModifier / 100)
     var upscaleModifier = 1
     if ((isNotifPokemon && settings.upscaleNotifMarkers) || serverSettings.upscaledPokemon.includes(pokemon.pokemon_id)) {
-        upscaleModifier = 1.3
+        iconSize *= 1.3
     }
     if (settings.scaleByRarity) {
         const pokemonRarity = getPokemonRarity(pokemon.pokemon_id)
@@ -98,6 +100,13 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
         }
     }
     iconSize *= upscaleModifier
+
+    if (iv && iv > 90) {
+        iconSize *= 2
+    }
+    if (level > 27) {
+        iconSize *= 1.3
+    }
 
     var icon = marker.options.icon
     icon.options.iconSize = [iconSize, iconSize]

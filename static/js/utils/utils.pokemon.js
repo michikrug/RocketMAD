@@ -211,6 +211,9 @@ function getIvsPercentageCssColor(ivs) {
 }
 
 function getPokemonLevel(cpMultiplier) {
+    if (!cpMultiplier) {
+        return 0
+    }
     if (cpMultiplier < 0.734) {
         var pokemonLevel = 58.35178527 * cpMultiplier * cpMultiplier - 2.838007664 * cpMultiplier + 0.8539209906
     } else {
