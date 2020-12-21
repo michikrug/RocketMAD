@@ -139,6 +139,10 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
         marker.setZIndexOffset(pokemonZIndex)
     }
 
+    if (iv && iv >= 90) {
+        marker.setZIndexOffset(pokemonUltraRareZIndex)
+    }
+
     updateMarkerLayer(marker, isNotifPokemon, notifiedPokemonData[pokemon.encounter_id])
 
     return marker
