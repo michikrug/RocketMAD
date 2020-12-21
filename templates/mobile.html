@@ -36,7 +36,7 @@
   </head>
 
   <body class="mobile-page">
-    <div class="wrapper" style="height:calc(100% - 60px)">
+    <div class="wrapper" style="height:calc(100% - 60px);overflow: auto;">
     {% if settings.motd %}
     <div id="motd-modal" class="modal">
       <div class="modal-content">
@@ -72,7 +72,7 @@
 
     </div>
 
-    <div id="ad-space" style="height:60px;width:100%;display:table;overflow:hidden">
+    <div id="ad-space" style="height:60px;width:100%;overflow:hidden">
       <script>
         function removeAdSpace() {
           var el = document.getElementById('ad-space');
@@ -89,14 +89,13 @@
       </script>
       <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
       <!-- Banner Ad -->
-      <div style="display:table-cell;vertical-align:middle;text-align:center;">
+      <div style="vertical-align:middle;text-align:center;position:absolute;bottom:0;">
         <ins class="adsbygoogle"
           style="display:inline-block;width:100%;height:60px"
           data-full-width-responsive="true"
           data-ad-client="ca-pub-5312537636379418"
           data-ad-slot="7370531483"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <div>Platz für Werbung :)</div>
       </div>
     </div>
 
