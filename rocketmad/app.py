@@ -30,6 +30,7 @@ from .pogoprotos.enums.pokemon_id_pb2 import PokemonId
 from .pogoprotos.enums.raid_level_pb2 import RaidLevel
 from .pogoprotos.enums.weather_condition_pb2 import WeatherCondition
 from .transform import transform_from_wgs_to_gcj
+from .reverseproxy import ReverseProxied
 from .utils import (get_args, get_pokemon_name, get_sessions, i18n,
                     parse_geofence_file)
 
@@ -129,6 +130,9 @@ def create_app():
     app = Flask(__name__,
                 template_folder='../templates',
                 static_folder='../static')
+
+    app.wsgi_app = ReverseProxied(app.wsgi_app, script_name='/rmap')
+
     app.json_encoder = CustomJSONEncoder
     cache_buster = CacheBuster(config={'extensions': ['.js', '.css']})
     cache_buster.init_app(app)
