@@ -186,13 +186,10 @@ class ImageGenerator:
                              evolution=EVOLUTION_UNSET, weather=None, iv=0, level=0):
         im_lines = []
 
-        bordercolor = 'black'
         addon = None
         if level > 27:
-            bordercolor = 'green'
             addon = 'highlevel'
         if iv >= 89:
-            bordercolor = 'red'
             addon = 'highiv'
 
         # Add Pokemon icon
@@ -205,15 +202,21 @@ class ImageGenerator:
                 '-fuzz 0.5% -trim +repage'
                 ' -scale "133x133>" -unsharp 0x1'
                 ' -background none -gravity center -extent 139x139'
-                ' -bordercolor none -border 2'
+                ' -bordercolor none -border 3'
                 ' -background black -alpha background'
                 ' -channel A -blur 2x2 -level 0,0%'
-                ' -background {bcolor} -alpha background'
-                ' -channel A -blur 2x2 -level 0,10%'
+            )
+            if addon:
+                bordercolor = 'limegreen' if addon is 'highlevel' else 'red'
+                im_lines.append(
+                    ' -background {bcolor} -alpha background'
+                    ' -channel A -blur 3x3 -level 0,50%'.format(bcolor=bordercolor)
+                )
+            im_lines.append(
                 ' -background black -alpha background'
                 ' -channel A -blur 0x1 -level 0,10%'
                 ' -adaptive-resize {size}x{size}'
-                ' -modulate 100,110'.format(size=target_size,bcolor=bordercolor)
+                ' -modulate 100,110'.format(size=target_size)
             )
         else:
             # Extract pokemon icon from spritesheet
