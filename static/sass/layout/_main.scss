@@ -1,3 +1,7 @@
+body, html {
+  height: 100%;
+}
+
 body.dark {
   background-color: $background-color-dark;
   color: $text-color-dark;
@@ -16,7 +20,15 @@ body.dark {
   width: 100%;
   height: calc(100% - 56px);
 
+  .with-ads {
+    height: calc(100% - 116px);
+  }
+
   @media screen and (max-width: 600px) {
     height: calc(100% - 48px);
+
+    .with-ads {
+      height: calc(100% - 108px);
+    }
   }
 }

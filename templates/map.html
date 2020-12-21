@@ -47,7 +47,6 @@
   </head>
 
   <body class="map-body">
-    <div class="wrapper" style="height:calc(100% - 60px)">
     <header>
       <div class="navbar-fixed">
         <nav>
@@ -1761,18 +1760,16 @@
     </ul>
     {% endif %}
 
-    <div class="map-container">
+    <div class="map-container with-ads">
       <div id="map" class="leaflet-map"></div>
     </div>
 
-    </div>
-
-    <div id="ad-space" style="height:60px;width:100%;display:table;overflow:hidden">
+    <div id="ad-space" style="height:60px;width:100%;display:table;overflow:hidden;position:absolute;bottom:0;">
       <script>
         function removeAdSpace() {
           var el = document.getElementById('ad-space');
           el.parentNode.removeChild(el);
-          document.getElementsByClassName('wrapper')[0].style.height = '100%';
+          document.getElementsByClassName('map-container')[0].classList.remove('with-ads');
           clearTimeout(reloader);
         }
         var reloader = setTimeout(function() { location.reload(); }, 1800000);
