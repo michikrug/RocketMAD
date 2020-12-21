@@ -84,7 +84,7 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
     var iconSize = 32 * (settings.pokemonIconSizeModifier / 100)
     var upscaleModifier = 1
     if ((isNotifPokemon && settings.upscaleNotifMarkers) || serverSettings.upscaledPokemon.includes(pokemon.pokemon_id)) {
-        iconSize *= 1.3
+        iconSize *= 1.2
     }
     if (settings.scaleByRarity) {
         const pokemonRarity = getPokemonRarity(pokemon.pokemon_id)
@@ -102,10 +102,10 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
     iconSize *= upscaleModifier
 
     if (iv && iv > 90) {
-        iconSize *= 2
+        iconSize *= 1.5
     }
     if (level > 27) {
-        iconSize *= 1.3
+        iconSize *= 1.2
     }
 
     var icon = marker.options.icon
