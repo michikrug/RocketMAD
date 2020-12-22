@@ -201,7 +201,7 @@ class ImageGenerator:
                 ' -channel A -blur 2x2 -level 0,0%'
             )
             if modifier:
-                bordercolor = 'limegreen' if modifier is 'highlevel' else 'red'
+                bordercolor = 'limegreen' if modifier == 'highlevel' else 'red'
                 im_lines.append(
                     ' -background {bcolor} -alpha background'
                     ' -channel A -blur 3x3 -level 0,50%'.format(bcolor=bordercolor)
