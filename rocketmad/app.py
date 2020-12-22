@@ -1030,8 +1030,7 @@ def create_app():
             evolution = int(request.args.get('evolution', '0'))
             shiny = 'shiny' in request.args
             weather = int(request.args.get('weather', '0'))
-            iv = float(request.args.get('iv', '0'))
-            level = int(request.args.get('level', '0'))
+            modifier = request.args.get('modifier', None)
 
             # An exception is thrown when values are invalid.
             PokemonId.Name(pkm)
@@ -1050,7 +1049,7 @@ def create_app():
         else:
             filename = image_generator.get_pokemon_map_icon(
                 pkm, gender=gender, form=form, costume=costume,
-                evolution=evolution, weather=weather, iv=iv, level=level)
+                evolution=evolution, weather=weather, modifier=modifier)
         return send_file(filename, mimetype='image/png')
 
     @app.route('/gym_img')

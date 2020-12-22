@@ -89,6 +89,12 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
     if (settings.scaleByRarity) {
         const pokemonRarity = getPokemonRarity(pokemon.pokemon_id)
         switch (pokemonRarity) {
+            case 2:
+                upscaleModifier = 1.1
+                break
+            case 3:
+                upscaleModifier = 1.2
+                break
             case 4:
                 upscaleModifier = 1.3
                 break
