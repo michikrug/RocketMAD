@@ -4,9 +4,11 @@
   height: 100%;
   z-index: 1001;
   margin-top: 56px;
+  padding-bottom: 70px !important;
 
   &.with-ads {
     height: calc(100% - 116px);
+    padding-bottom: 20px !important;
   }
 
   @media screen and (max-width: 600px) {
