@@ -1549,10 +1549,15 @@
               <div class="input-field">
                 <div class="select-title">{{ i18n('Load saved settings') }}</div>
                 <select id="load-settings-select">
-                  <option value="" default></option>
-                  {% for item in settings.savedSettings %}
-                  <option value="{{ item }}">{{ item }}</option>
-                  {% endfor %}
+                  <!-- Options are dynamically added. -->
+                </select>
+              </div>
+            </div>
+            <div class="form-control">
+              <div class="input-field">
+                <div class="select-title">{{ i18n('Delete saved settings') }}</div>
+                <select id="delete-settings-select">
+                  <!-- Options are dynamically added. -->
                 </select>
               </div>
             </div>
