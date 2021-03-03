@@ -144,6 +144,8 @@ function initSettings() {
     settings.darkMode = Store.get('darkMode')
 
     settings.clusterZoomLevel = isMobileDevice() ? serverSettings.clusterZoomLevelMobile : serverSettings.clusterZoomLevel
+
+    settings.savedSettings = Store.get('savedSettings')
 }
 
 function initSettingsSidebar() {
@@ -1330,6 +1332,20 @@ function initSettingsSidebar() {
             // Reset file input.
             $(this).val('')
         }
+    })
+
+    $('#load-settings-select').on('change', function () {
+        const confirmed = confirm('Are you sure you want to load the saved settings and replace all current ones?')
+        if (confirmed) {
+            Store.restore(settings.savedSettings[this.value])
+            window.location.reload()
+        }
+    })
+
+    $('#save-settings-button').on('click', function () {
+        const settingsName = prompt('Please state a name for this set of settings (settings with the same name will be overwritten):', 'Setting1')
+        settings.savedSettings[settingsName.replaceAll(/[^\w-_\ ]/gi, '')] = JSON.stringify(Store.dump())
+        Store.set('savedSettings', settings.savedSettings)
     })
 
     $('#export-settings-button').on('click', function () {
