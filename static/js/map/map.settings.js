@@ -1617,6 +1617,12 @@ const refreshSavedSettings = function () {
     for (const item in settings.savedSettings) {
         addOption(item)
     }
+    if (M.FormSelect.getInstance(loadSettingsSelect)) {
+        M.FormSelect.init(loadSettingsSelect)
+    }
+    if (M.FormSelect.getInstance(deleteSettingsSelect)) {
+        M.FormSelect.init(deleteSettingsSelect)
+    }
 }
 
 const createFilterButton = (function () {
