@@ -1337,7 +1337,7 @@ function initSettingsSidebar() {
     $('#load-settings-select').on('change', function () {
         const confirmed = confirm(`Are you sure you want to load the saved settings "${this.value}" and replace all current ones?`)
         if (confirmed) {
-            Store.restore(settings.savedSettings[this.value])
+            Store.restore(JSON.parse(settings.savedSettings[this.value]))
             window.location.reload()
         }
     })
@@ -1600,7 +1600,7 @@ function initSettingsSidebar() {
 
 const refreshSavedSettings = function () {
     const loadSettingsSelect = document.getElementById('load-settings-select')
-    const deleteSettingsSelect = document.getElementById('load-settings-select')
+    const deleteSettingsSelect = document.getElementById('delete-settings-select')
     const addOption = function(item) {
         const option = document.createElement('option')
         option.value = option.text = item
