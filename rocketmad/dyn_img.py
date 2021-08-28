@@ -392,14 +392,15 @@ class ImageGenerator:
         gender_suffix = '.g2' if gender == FEMALE else ''
         shiny_suffix = '.s' if shiny else ''
 
-        filename = self.pokemon_icon_path / 'Addressable Assets' / \
-            f'pm{pkm}{form_suffix}{costume_suffix}{gender_suffix}{shiny_suffix}.icon.png'
+        filename = f'pm{pkm}{form_suffix}{costume_suffix}{gender_suffix}' \
+                   f'{shiny_suffix}.icon.png'
+        file_path = self.pokemon_icon_path / 'Addressable Assets' / filename
 
-        if gender == FEMALE and not filename.exists():
+        if not file_path.exists() and gender != MALE:
             return self._get_unity_pokemon_asset_path(
                 pkm, MALE, form, costume, evolution, shiny)
 
-        return filename
+        return file_path
 
     def _get_old_pokemon_asset_path(self, pkm, gender=GENDER_UNSET, form=0,
                                     costume=0, evolution=EVOLUTION_UNSET,
@@ -448,7 +449,7 @@ class ImageGenerator:
                 .format(pkm, gender_form_asset_suffix,
                         costume_asset_suffix, shiny_suffix))
 
-        if not file_path.exists() and gender == FEMALE:
+        if not file_path.exists() and gender != MALE:
             return self._get_old_pokemon_asset_path(
                 pkm, MALE, form, costume, evolution, shiny)
 
@@ -475,7 +476,7 @@ class ImageGenerator:
             target_dir = path_generated / 'pokemon_{}'.format(classifier)
         else:
             target_dir = path_generated / 'pokemon'
-        target_filename = 'pm_{}{}{}{}{}{}{}{}.png'.format(
+        target_filename = 'pm{}{}{}{}{}{}{}{}.png'.format(
             pkm, gender_suffix, form_suffix, costume_suffix, evolution_suffix,
             shiny_suffix, weather_suffix, modifier_suffix)
 
@@ -485,7 +486,7 @@ class ImageGenerator:
             log.warning("Cannot find PogoAssets file for target file {}"
                         .format(target_filename))
             dummy_icon = self.pokemon_icon_path / 'pokemon_icon_000.png'
-            target = Path(target_dir) / 'pm_0.png'
+            target = Path(target_dir) / 'pm0.png'
             if dummy_icon.exists():
                 return dummy_icon, target
             else:
