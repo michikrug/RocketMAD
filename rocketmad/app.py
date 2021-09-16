@@ -6,7 +6,7 @@ import logging
 import redis
 import time
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from flask import (abort, Flask, jsonify, redirect, render_template, request,
                    send_file, send_from_directory, session, url_for)
 from flask.json import JSONEncoder
@@ -148,6 +148,7 @@ def create_app():
         r = redis.Redis(args.redis_host, args.redis_port)
         app.config['SESSION_REDIS'] = r
         app.config['SESSION_USE_SIGNER'] = True
+        app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=3.0)
         app.secret_key = args.secret_key
         Session(app)
         if args.basic_auth:
@@ -762,6 +763,7 @@ def create_app():
         scanned_locs = (request.args.get('scannedLocs') == 'true'
                         and not user_args.no_scanned_locs)
         nests = request.args.get('nests') == 'true' and user_args.nests
+        exclude_nearby_cells = request.args.get('excludeNearbyCells') == 'true'
 
         all_pokemon = request.args.get('allPokemon') == 'true'
         all_gyms = request.args.get('allGyms') == 'true'
@@ -785,6 +787,8 @@ def create_app():
             d['allScannedLocs'] = True
         if all_nests:
             d['allNests'] = True
+        if exclude_nearby_cells:
+            d['excludeNearbyCells'] = True
 
         geofences = (
             parse_geofence_file('geofences/' + user_args.geofence_file)
@@ -815,7 +819,8 @@ def create_app():
                         swLat, swLng, neLat, neLng, eids=eids, ids=ids,
                         geofences=geofences,
                         exclude_geofences=exclude_geofences,
-                        verified_despawn_time=verified_despawn))
+                        verified_despawn_time=verified_despawn,
+                        exclude_nearby_cells=exclude_nearby_cells))
             else:
                 # If map is already populated only request modified Pokemon
                 # since last request time.
@@ -824,7 +829,8 @@ def create_app():
                         swLat, swLng, neLat, neLng, timestamp=timestamp,
                         eids=eids, ids=ids, geofences=geofences,
                         exclude_geofences=exclude_geofences,
-                        verified_despawn_time=verified_despawn))
+                        verified_despawn_time=verified_despawn,
+                        exclude_nearby_cells=exclude_nearby_cells))
 
                 if new_area:
                     # If screen is moved add newly uncovered Pokemon to the
@@ -836,7 +842,8 @@ def create_app():
                                 oSwLng=oSwLng, oNeLat=oNeLat, oNeLng=oNeLng,
                                 eids=eids, ids=ids, geofences=geofences,
                                 exclude_geofences=exclude_geofences,
-                                verified_despawn_time=verified_despawn)))
+                                verified_despawn_time=verified_despawn,
+                                exclude_nearby_cells=exclude_nearby_cells)))
 
             if request.args.get('reids'):
                 request_reids = request.args.get('reids').split(',')
@@ -845,7 +852,8 @@ def create_app():
                     Pokemon.get_active(swLat, swLng, neLat, neLng, ids=reids,
                                        geofences=geofences,
                                        exclude_geofences=exclude_geofences,
-                                       verified_despawn_time=verified_despawn))
+                                       verified_despawn_time=verified_despawn,
+                                       exclude_nearby_cells=exclude_nearby_cells))
                 d['reids'] = reids
 
         if seen:
