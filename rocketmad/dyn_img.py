@@ -258,7 +258,7 @@ class ImageGenerator:
             im_lines.append(
                 '-gravity southwest'
                 ' -fill "#FFFD" -stroke black -draw "circle {x},{y} {x},{y2}"'
-                ' -fill "#333" -stroke "#333" -font "{font}" -pointsize 18 -annotate +4+9 "100"'.format(
+                ' -fill "#333" -stroke "#333" -font "{font}" -pointsize 18 -annotate +3+9 "100"'.format(
                     x=x, y=y, y2=y2, size=target_size, font=font)
             )
 
