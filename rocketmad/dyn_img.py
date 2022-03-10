@@ -181,7 +181,7 @@ class ImageGenerator:
                 pkm, classifier='telegram', gender=gender, form=form,
                 costume=costume, evolution=evolution)
             im_lines = ['-fuzz 0.5% -trim +repage'
-                        ' -scale "256x256" -unsharp 0x1'
+                        ' -adaptive-resize "256x256"'
                         ' -background none -gravity center -extent 256x256'
                         ' -quality 90 -define webp:lossless=true'
                         ]
