@@ -200,25 +200,21 @@ class ImageGenerator:
                 pkm, classifier='marker', gender=gender, form=form,
                 costume=costume, evolution=evolution, weather=weather, modifier=modifier)
             target_size = 96
+            bordercolor = 'black'
+            radius = 3
+            if modifier:
+                bordercolor = 'green' if modifier == 'highlevel' else 'red'
+                radius = 6
             im_lines.append(
                 '-fuzz 0.5% -trim +repage'
                 ' -scale "133x133>" -unsharp 0x1'
                 ' -background none -gravity center -extent 139x139'
-                ' -bordercolor none -border 3'
-                ' -background black -alpha background'
-                ' -channel A -blur 2x2 -level 0,0%'
-            )
-            if modifier:
-                bordercolor = 'limegreen' if modifier == 'highlevel' else 'red'
-                im_lines.append(
-                    ' -background {bcolor} -alpha background'
-                    ' -channel A -blur 3x3 -level 0,50%'.format(bcolor=bordercolor)
-                )
-            im_lines.append(
                 ' -background black -alpha background'
                 ' -channel A -blur 0x1 -level 0,10%'
+                ' \( +clone -background {bcolor} -shadow 100x{radius}+0+0 -channel A -level 0,50% +channel \) +swap'
+                ' -background none -layers merge +repage'
                 ' -adaptive-resize {size}x{size}'
-                ' -modulate 100,110'.format(size=target_size)
+                ' -modulate 100,110'.format(size=target_size, bcolor=bordercolor, radius=radius)
             )
         else:
             # Extract pokemon icon from spritesheet
