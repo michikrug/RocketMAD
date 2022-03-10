@@ -1024,6 +1024,7 @@ def create_app():
     @app.route('/pkm_img')
     def pokemon_img():
         raw = 'raw' in request.args
+        telegram = 'telegram' in request.args
         pkm = int(request.args.get('pkm'))
         gender = int(request.args.get('gender', '0'))
         form = int(request.args.get('form', '0'))
@@ -1032,6 +1033,12 @@ def create_app():
         shiny = 'shiny' in request.args
         weather = int(request.args.get('weather', '0'))
         modifier = request.args.get('modifier', None)
+
+        if telegram:
+            filename = image_generator.get_pokemon_telegram_icon(
+                pkm, gender=gender, form=form, costume=costume,
+                evolution=evolution)
+            return send_file(filename, mimetype='image/webp')
 
         if raw:
             filename = image_generator.get_pokemon_raw_icon(

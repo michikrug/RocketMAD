@@ -173,6 +173,23 @@ class ImageGenerator:
                 return candidates[c] if candidates[c] else c
         return None
 
+    def get_pokemon_telegram_icon(self, pkm, gender=GENDER_UNSET, form=0, costume=0,
+                                  evolution=EVOLUTION_UNSET):
+
+        if self.generate_images and self.use_pogo_assets:
+            source, target = self._pokemon_asset_path(
+                pkm, classifier='telegram', gender=gender, form=form,
+                costume=costume, evolution=evolution)
+            im_lines = ['-fuzz 0.5% -trim +repage'
+                        ' -scale "256x256" -unsharp 0x1'
+                        ' -background none -gravity center -extent 256x256'
+                        ' -quality 90 -define webp:lossless=true'
+                        ]
+            target = Path(str(target).replace('.png', '.webp'))
+            return self._run_imagemagick(source, im_lines, target)
+        else:
+            return path_icons / '{}.png'.format(pkm)
+
     def get_pokemon_raw_icon(self, pkm, gender=GENDER_UNSET, form=0, costume=0,
                              evolution=EVOLUTION_UNSET, shiny=False,
                              weather=None):
