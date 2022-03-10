@@ -201,9 +201,9 @@ function getPokemonMapIconUrl(pokemon, generateImages) {
     const costumeParam = pokemon.costume ? `&costume=${pokemon.costume}` : ''
     const evolutionParam = pokemon.evolution ? `&evolution=${pokemon.evolution}` : ''
     const weatherParam = pokemon.weather_boosted_condition ? `&weather=${pokemon.weather_boosted_condition}` : ''
-    const modifierParam = (pokemon.individual_attack ? getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina) : 0) >= 90 ? '&modifier=highiv' :
-                          (pokemon.cp_multiplier ? getPokemonLevel(pokemon.cp_multiplier) : 0) > 27 ? '&modifier=highlevel' : '';
-
+    const ivs = pokemon.individual_attack ? getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina) : 0
+    const lvl = pokemon.cp_multiplier ? getPokemonLevel(pokemon.cp_multiplier) : 0
+    const modifierParam = ivs === 100 ? '&modifier=perfect' : ivs >= 90 ? '&modifier=highiv' : lvl > 27 ? '&modifier=highlevel' : ''
     return `pkm_img?pkm=${pokemon.pokemon_id}${genderParam}${formParam}${costumeParam}${evolutionParam}${weatherParam}${modifierParam}`
 }
 

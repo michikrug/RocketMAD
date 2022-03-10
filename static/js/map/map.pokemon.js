@@ -86,36 +86,39 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
     var level = getPokemonLevel(pokemon.cp_multiplier)
     var iv = getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina)
     var iconSize = 32 * (settings.pokemonIconSizeModifier / 100) * 1.2
-    var upscaleModifier = 1
-    if ((isNotifPokemon && settings.upscaleNotifMarkers) || serverSettings.upscaledPokemon.includes(pokemon.pokemon_id)) {
+
+    if (iv && iv > 99) {
+        iconSize *= 1.3
+    } else if (iv && iv >= 90) {
         iconSize *= 1.2
+    }
+    if (level > 27) {
+        iconSize *= 1.1
+    }
+
+    if ((isNotifPokemon && settings.upscaleNotifMarkers) || serverSettings.upscaledPokemon.includes(pokemon.pokemon_id)) {
+        iconSize *= 1.1
     }
     if (settings.scaleByRarity) {
         const pokemonRarity = getPokemonRarity(pokemon.pokemon_id)
+        var upscaleModifier = 1
         switch (pokemonRarity) {
             case 2:
                 upscaleModifier = 1.1
                 break
             case 3:
-                upscaleModifier = 1.2
+                upscaleModifier = 1.15
                 break
             case 4:
-                upscaleModifier = 1.3
+                upscaleModifier = 1.2
                 break
             case 5:
-                upscaleModifier = 1.4
+                upscaleModifier = 1.25
                 break
             case 6:
-                upscaleModifier = 1.5
+                upscaleModifier = 1.3
         }
-    }
-    iconSize *= upscaleModifier
-
-    if (iv && iv > 90) {
-        iconSize *= 1.5
-    }
-    if (level > 27) {
-        iconSize *= 1.2
+        iconSize *= upscaleModifier
     }
 
     var icon = marker.options.icon
@@ -149,7 +152,9 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
         marker.setZIndexOffset(pokemonZIndex)
     }
 
-    if (iv && iv >= 90) {
+    if (iv && iv > 99) {
+        marker.setZIndexOffset(pokemonNewSpawnZIndex)
+    } else if (iv && iv >= 90) {
         marker.setZIndexOffset(pokemonUltraRareZIndex)
     }
 

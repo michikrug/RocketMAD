@@ -200,21 +200,28 @@ class ImageGenerator:
                 pkm, classifier='marker', gender=gender, form=form,
                 costume=costume, evolution=evolution, weather=weather, modifier=modifier)
             target_size = 96
-            bordercolor = 'black'
             radius = 3
-            if modifier:
-                bordercolor = 'green' if modifier == 'highlevel' else 'red'
-                radius = 6
+            colors = {'highlevel': 'green', 'highiv': 'red', 'perfect': 'purple'}
+            if modifier in colors:
+                radius = 1
             im_lines.append(
                 '-fuzz 0.5% -trim +repage'
                 ' -scale "133x133>" -unsharp 0x1'
                 ' -background none -gravity center -extent 139x139'
                 ' -background black -alpha background'
                 ' -channel A -blur 0x1 -level 0,10%'
-                ' \( +clone -background {bcolor} -shadow 100x{radius}+0+0 -channel A -level 0,50% +channel \) +swap'
-                ' -background none -layers merge +repage'
-                ' -adaptive-resize {size}x{size}'
-                ' -modulate 100,110'.format(size=target_size, bcolor=bordercolor, radius=radius)
+                ' \( +clone -background black -shadow 100x{radius}+0+0 -channel A -level 0,50% +channel \) +swap'
+                ' -background none -layers merge +repage'.format(radius=radius)
+            )
+            if modifier in colors:
+                im_lines.append(
+                    '\( +clone -background {bcolor} -shadow 100x8+0+0 -channel A -level 0,50% +channel \) +swap'
+                    ' -background none -layers merge +repage'
+                    ' -shave 12x12 +repage'.format(bcolor=colors[modifier])
+                )
+            im_lines.append(
+                '-adaptive-resize {size}x{size}'
+                ' -modulate 100,110'.format(size=target_size)
             )
         else:
             # Extract pokemon icon from spritesheet
@@ -241,6 +248,18 @@ class ImageGenerator:
                 ' -fill "#FFFD" -stroke black -draw "circle {x},{y} {x},{y2}"'
                 ' -draw "image over 1,1 42,42 \'{weather_img}\'"'.format(
                     x=x, y=y, y2=y2, weather_img=weather_images[weather])
+            )
+
+        if modifier == 'perfect':
+            radius = 20
+            x = radius + 1
+            y = target_size - radius - 2
+            y2 = target_size - 1
+            im_lines.append(
+                '-gravity southwest'
+                ' -fill "#FFFD" -stroke black -draw "circle {x},{y} {x},{y2}"'
+                ' -fill "#333" -stroke "#333" -font Arial -pointsize 20 -annotate +4+9 "100"'.format(
+                    x=x, y=y, y2=y2, size=target_size)
             )
 
         return self._run_imagemagick(source, im_lines, target)
@@ -473,7 +492,9 @@ class ImageGenerator:
         evolution_suffix = '_e' + str(evolution) if evolution > 0 else ''
         shiny_suffix = '_s' if shiny else ''
         weather_suffix = '_' + weather_names[weather] if weather else ''
-        modifier_suffix = '_' + str(modifier) if modifier else ''
+
+        valid_modifiers = ['highlevel', 'highiv', 'perfect']
+        modifier_suffix = '_' + str(modifier) if modifier in valid_modifiers else ''
 
         if classifier:
             target_dir = path_generated / 'pokemon_{}'.format(classifier)
