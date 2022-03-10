@@ -258,8 +258,8 @@ class ImageGenerator:
             im_lines.append(
                 '-gravity southwest'
                 ' -fill "#FFFD" -stroke black -draw "circle {x},{y} {x},{y2}"'
-                ' -fill "#333" -stroke "#333" -font Arial -pointsize 20 -annotate +4+9 "100"'.format(
-                    x=x, y=y, y2=y2, size=target_size)
+                ' -fill "#333" -stroke "#333" -font "{font}" -pointsize 18 -annotate +4+9 "100"'.format(
+                    x=x, y=y, y2=y2, size=target_size, font=font)
             )
 
         return self._run_imagemagick(source, im_lines, target)
