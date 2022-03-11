@@ -83,7 +83,7 @@ function customizePokemonMarker(pokemon, marker, isNotifPokemon) {
 }
 
 function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
-    let iconSize = 32 * (settings.pokemonIconSizeModifier / 100) * 1.2
+    let iconSize = 32 * (settings.pokemonIconSizeModifier / 100)
     let upscaleModifier = 1
     let zIndex = pokemonZIndex
 
@@ -104,7 +104,7 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
     }
 
     if ((isNotifPokemon && settings.upscaleNotifMarkers) || serverSettings.upscaledPokemon.includes(pokemon.pokemon_id)) {
-        iconSize *= 1.25
+        upscaleModifier = 1.3
     }
 
     if (settings.scaleByRarity) {
@@ -125,7 +125,6 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
             case 6:
                 upscaleModifier = 1.3
         }
-        iconSize *= upscaleModifier
     }
 
     iconSize *= upscaleModifier
