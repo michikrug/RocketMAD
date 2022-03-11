@@ -110,6 +110,12 @@ raid_colors = {
 font = path_static / 'Arial Black.ttf'
 font_pointsize = 25
 
+highlight_colors = {
+    'highlevel': args.highlight_highlevel_color.lower(),
+    'highiv': args.highlight_highiv_color.lower(),
+    'perfect': args.highlight_perfect_color.lower()
+}
+
 
 class ImageGenerator:
     # Will be set during config parsing
@@ -217,10 +223,9 @@ class ImageGenerator:
                 pkm, classifier='marker', gender=gender, form=form,
                 costume=costume, evolution=evolution, weather=weather, modifier=modifier)
             target_size = 96
-            radius = 3
-            colors = {'highlevel': 'green', 'highiv': 'red', 'perfect': 'purple'}
-            if modifier in colors:
-                radius = 1
+
+            highlight = args.highlight_pokemon and modifier in highlight_colors and highlight_colors[modifier] != 'none'
+
             im_lines.append(
                 '-fuzz 0.5% -trim +repage'
                 ' -scale "133x133>" -unsharp 0x1'
@@ -228,13 +233,13 @@ class ImageGenerator:
                 ' -background black -alpha background'
                 ' -channel A -blur 0x1 -level 0,10%'
                 ' \( +clone -background black -shadow 100x{radius}+0+0 -channel A -level 0,50% +channel \) +swap'
-                ' -background none -layers merge +repage'.format(radius=radius)
+                ' -background none -layers merge +repage'.format(radius=(1 if highlight else 3))
             )
-            if modifier in colors:
+            if highlight:
                 im_lines.append(
                     '\( +clone -background {bcolor} -shadow 100x8+0+0 -channel A -level 0,50% +channel \) +swap'
                     ' -background none -layers merge +repage'
-                    ' -shave 12x12 +repage'.format(bcolor=colors[modifier])
+                    ' -shave 12x12 +repage'.format(bcolor=highlight_colors[modifier])
                 )
             im_lines.append(
                 '-adaptive-resize {size}x{size}'
@@ -267,7 +272,7 @@ class ImageGenerator:
                     x=x, y=y, y2=y2, weather_img=weather_images[weather])
             )
 
-        if modifier == 'perfect':
+        if args.highlight_perfect_circle and modifier == 'perfect':
             radius = 20
             x = radius + 1
             y = target_size - radius - 2
@@ -510,8 +515,8 @@ class ImageGenerator:
         shiny_suffix = '_s' if shiny else ''
         weather_suffix = '_' + weather_names[weather] if weather else ''
 
-        valid_modifiers = ['highlevel', 'highiv', 'perfect']
-        modifier_suffix = '_' + str(modifier) if modifier in valid_modifiers else ''
+        highlight = args.highlight_pokemon and modifier in highlight_colors and highlight_colors[modifier] != 'none'
+        modifier_suffix = '_' + str(modifier) if highlight else ''
 
         if classifier:
             target_dir = path_generated / 'pokemon_{}'.format(classifier)
