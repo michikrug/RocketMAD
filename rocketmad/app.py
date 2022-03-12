@@ -249,7 +249,7 @@ def create_app():
             'nestParksFileName': user_args.nest_parks_filename,
             'exParks': user_args.ex_parks,
             'exParksFileName': user_args.ex_parks_filename,
-            'highlightPokemon': user_args.highlight_pokemon.lower(),
+            'highlightPokemon': user_args.highlight_pokemon.lower() if user_args.highlight_pokemon != None else None,
             'highlightColorPerfect': user_args.highlight_color_perfect,
             'highlightColorIV': user_args.highlight_color_iv,
             'highlightColorLevel': user_args.highlight_color_level,
