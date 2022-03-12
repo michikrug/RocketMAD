@@ -125,6 +125,9 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
 
     iconSize *= upscaleModifier
 
+    icon.options.shadowUrl = null
+    icon.options.shadowSize = null
+    icon.options.className = null
     if (serverSettings.highlightPokemon && settings.highlightPokemon) {
         const type = ivs === 100 ? 'Perfect' : ivs >= settings.highlightThresholdIV ? 'IV' : lvl > settings.highlightThresholdLevel ? 'Level' : ''
         if (type) {
