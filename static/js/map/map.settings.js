@@ -472,7 +472,7 @@ function initSettingsSidebar() {
         })
         highlightRadiusSlider.noUiSlider.on('change', function () {
             settings.highlightRadius = this.get()
-            $('#highlight-level-slider-title').text(`${i18n('Blur Radius')} (${settings.highlightRadius}px)`)
+            $('#highlight-radius-slider-title').text(`${i18n('Blur Radius')} (${settings.highlightRadius}px)`)
             document.documentElement.style.setProperty('--blur-radius', `${settings.highlightRadius}px`)
             updatePokemons()
             Store.set('highlightRadius', settings.highlightRadius)
