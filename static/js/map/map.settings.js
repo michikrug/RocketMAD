@@ -45,6 +45,12 @@ function initSettings() {
         settings.tinyRattataNotifs = Store.get('tinyRattataNotifs')
         settings.bigMagikarpNotifs = Store.get('bigMagikarpNotifs')
         settings.scaleByValues = Store.get('scaleByValues')
+        settings.highlightPokemon = Store.get('highlightPokemon')
+        settings.highlightColorPerfect = Store.get('highlightColorPerfect')
+        settings.highlightColorLevel = Store.get('highlightColorLevel')
+        settings.highlightColorIV = Store.get('highlightColorIV')
+        settings.highlightThresholdLevel = Store.get('highlightThresholdLevel')
+        settings.highlightThresholdIV = Store.get('highlightThresholdIV')
     }
     settings.scaleByRarity = serverSettings.rarity && Store.get('scaleByRarity')
     if (serverSettings.rarity) {
@@ -376,7 +382,7 @@ function initSettingsSidebar() {
 
         var highlightIvSlider = document.getElementById('highlight-iv-slider')
         noUiSlider.create(highlightIvSlider, {
-            start: [0, settings.highlightThresholdIV],
+            start: [settings.highlightThresholdIV],
             connect: 'lower',
             step: 1,
             range: {
@@ -401,7 +407,7 @@ function initSettingsSidebar() {
 
         var highlightLevelSlider = document.getElementById('highlight-level-slider')
         noUiSlider.create(highlightLevelSlider, {
-            start: [0, settings.highlightThresholdLevel],
+            start: [settings.highlightThresholdLevel],
             connect: 'lower',
             step: 1,
             range: {

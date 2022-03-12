@@ -44,7 +44,7 @@
     {% endif %}
     <link rel="stylesheet" href="https://cdn.datatables.net/v/dt/dt-1.10.20/datatables.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/css/app.min.css') }}">
-    {% if settings.highlightPokemon && settings.highlightPokemonCSS %}
+    {% if settings.highlightPokemon and settings.highlightPokemonCSS %}
     <style>
       :root {
         --color-perfect: purple;
