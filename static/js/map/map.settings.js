@@ -51,9 +51,6 @@ function initSettings() {
         settings.highlightColorLevel = Store.get('highlightColorLevel')
         settings.highlightThresholdIV = Store.get('highlightThresholdIV')
         settings.highlightThresholdLevel = Store.get('highlightThresholdLevel')
-        document.documentElement.style.setProperty('--color-perfect', settings.highlightColorPerfect)
-        document.documentElement.style.setProperty('--color-iv', settings.highlightColorIV)
-        document.documentElement.style.setProperty('--color-level', settings.highlightColorLevel)
     }
     settings.scaleByRarity = serverSettings.rarity && Store.get('scaleByRarity')
     if (serverSettings.rarity) {
@@ -1519,6 +1516,12 @@ function initSettingsSidebar() {
         $('#highlight-pokemon-wrapper').toggle(settings.highlightPokemon)
         $('#highlight-iv-slider-title').text(`${i18n('min. IVs')} (${settings.highlightThresholdIV}%)`)
         $('#highlight-level-slider-title').text(`${i18n('min. Level')} (L${settings.highlightThresholdLevel})`)
+        $('#hightlight-color-perfect').val(settings.highlightColorPerfect)
+        document.documentElement.style.setProperty('--color-perfect', settings.highlightColorPerfect)
+        $('#hightlight-color-iv').val(settings.highlightColorIV)
+        document.documentElement.style.setProperty('--color-iv', settings.highlightColorIV)
+        $('#hightlight-color-level').val(settings.highlightColorLevel)
+        document.documentElement.style.setProperty('--color-level', settings.highlightColorLevel)
     }
     if (serverSettings.rarity) {
         $('#rarity-select').val(settings.includedRarities)
