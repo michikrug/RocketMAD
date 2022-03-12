@@ -380,6 +380,24 @@ function initSettingsSidebar() {
             Store.set('highlightPokemon', this.checked)
         })
 
+        $('#hightlight-color-perfect').on('change', function () {
+            settings.highlightColorPerfect = this.value
+            updatePokemons()
+            Store.set('highlightColorPerfect', this.value)
+        })
+
+        $('#hightlight-color-iv').on('change', function () {
+            settings.highlightColorIV = this.value
+            updatePokemons()
+            Store.set('highlightColorIV', this.value)
+        })
+
+        $('#hightlight-color-level').on('change', function () {
+            settings.highlightColorLevel = this.value
+            updatePokemons()
+            Store.set('highlightColorLevel', this.value)
+        })
+
         var highlightIvSlider = document.getElementById('highlight-iv-slider')
         noUiSlider.create(highlightIvSlider, {
             start: [settings.highlightThresholdIV],
