@@ -47,10 +47,13 @@ function initSettings() {
         settings.scaleByValues = Store.get('scaleByValues')
         settings.highlightPokemon = Store.get('highlightPokemon')
         settings.highlightColorPerfect = Store.get('highlightColorPerfect')
-        settings.highlightColorLevel = Store.get('highlightColorLevel')
         settings.highlightColorIV = Store.get('highlightColorIV')
-        settings.highlightThresholdLevel = Store.get('highlightThresholdLevel')
+        settings.highlightColorLevel = Store.get('highlightColorLevel')
         settings.highlightThresholdIV = Store.get('highlightThresholdIV')
+        settings.highlightThresholdLevel = Store.get('highlightThresholdLevel')
+        document.documentElement.root.style.setProperty('--color-perfect', settings.highlightColorPerfect)
+        document.documentElement.root.style.setProperty('--color-iv', settings.highlightColorIV)
+        document.documentElement.root.style.setProperty('--color-level', settings.highlightColorLevel)
     }
     settings.scaleByRarity = serverSettings.rarity && Store.get('scaleByRarity')
     if (serverSettings.rarity) {
@@ -382,18 +385,21 @@ function initSettingsSidebar() {
 
         $('#hightlight-color-perfect').on('change', function () {
             settings.highlightColorPerfect = this.value
+            document.documentElement.root.style.setProperty('--color-perfect', this.value)
             updatePokemons()
             Store.set('highlightColorPerfect', this.value)
         })
 
         $('#hightlight-color-iv').on('change', function () {
             settings.highlightColorIV = this.value
+            document.documentElement.root.style.setProperty('--color-iv', this.value)
             updatePokemons()
             Store.set('highlightColorIV', this.value)
         })
 
         $('#hightlight-color-level').on('change', function () {
             settings.highlightColorLevel = this.value
+            document.documentElement.root.style.setProperty('--color-level', this.value)
             updatePokemons()
             Store.set('highlightColorLevel', this.value)
         })
