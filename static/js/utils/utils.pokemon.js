@@ -205,7 +205,7 @@ function getPokemonMapIconUrl(pokemon, generateImages) {
     const evolutionParam = pokemon.evolution ? `&evolution=${pokemon.evolution}` : ''
     const weatherParam = pokemon.weather_boosted_condition ? `&weather=${pokemon.weather_boosted_condition}` : ''
 
-    return `pkm_img?pkm=${pokemon.pokemon_id}${genderParam}${formParam}${costumeParam}${evolutionParam}${weatherParam}}`
+    return `pkm_img?pkm=${pokemon.pokemon_id}${genderParam}${formParam}${costumeParam}${evolutionParam}${weatherParam}`
 }
 
 function getIvsPercentage(atk, def, sta) {
