@@ -44,15 +44,17 @@ function initSettings() {
         settings.maxNotifLevel = Store.get('maxNotifLevel')
         settings.tinyRattataNotifs = Store.get('tinyRattataNotifs')
         settings.bigMagikarpNotifs = Store.get('bigMagikarpNotifs')
-        settings.scaleByValues = Store.get('scaleByValues')
-        settings.highlightPokemon = Store.get('highlightPokemon')
-        settings.highlightColorPerfect = Store.get('highlightColorPerfect')
-        settings.highlightColorIV = Store.get('highlightColorIV')
-        settings.highlightColorLevel = Store.get('highlightColorLevel')
-        settings.highlightThresholdIV = Store.get('highlightThresholdIV')
-        settings.highlightThresholdLevel = Store.get('highlightThresholdLevel')
-        settings.highlightRadius = Store.get('highlightRadius')
-        settings.highlightSize = Store.get('highlightSize')
+        if (serverSettings.highlightPokemon) {
+            settings.highlightPokemon = Store.get('highlightPokemon')
+            settings.highlightColorPerfect = Store.get('highlightColorPerfect')
+            settings.highlightColorIV = Store.get('highlightColorIV')
+            settings.highlightColorLevel = Store.get('highlightColorLevel')
+            settings.highlightThresholdIV = Store.get('highlightThresholdIV')
+            settings.highlightThresholdLevel = Store.get('highlightThresholdLevel')
+            settings.highlightRadius = Store.get('highlightRadius')
+            settings.highlightSize = Store.get('highlightSize')
+            settings.scaleByValues = Store.get('scaleByValues')
+        }
     }
     settings.scaleByRarity = serverSettings.rarity && Store.get('scaleByRarity')
     if (serverSettings.rarity) {
@@ -1570,12 +1572,12 @@ function initSettingsSidebar() {
         $('#hundo-ivs-pokemon-switch-wrapper').toggle(settings.maxIvs < 100)
         $('#pokemon-level-slider-title').text(`${i18n('Levels')} (${settings.minLevel} - ${settings.maxLevel})`)
         $('#pokemon-level-slider-wrapper').toggle(settings.filterPokemonByValues)
-        $('#scale-values-switch').prop('checked', settings.scaleByValues)
         if (serverSettings.highlightPokemon) {
             $('#pokemon-highlight-switch').prop('checked', settings.highlightPokemon)
             $('#highlight-pokemon-wrapper').toggle(settings.highlightPokemon)
             $('#highlight-iv-slider-title').text(`${i18n('min. IVs')} (${settings.highlightThresholdIV}%)`)
             $('#highlight-level-slider-title').text(`${i18n('min. Level')} (L${settings.highlightThresholdLevel})`)
+            $('#scale-values-switch').prop('checked', settings.scaleByValues)
             if (serverSettings.highlightPokemon !== 'server') {
                 if (serverSettings.highlightPokemon === 'svg') {
                     $('#highlight-size-slider-title').text(`${i18n('Circle Size')} (${settings.highlightSize})`)
