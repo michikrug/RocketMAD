@@ -85,7 +85,7 @@ function customizePokemonMarker(pokemon, marker, isNotifPokemon) {
 function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
     const icon = marker.options.icon
 
-    let iconSize = 32 * (settings.pokemonIconSizeModifier / 100)
+    let iconSize = 32 * (settings.pokemonIconSizeModifier / 100) * 1.2
     let upscaleModifier = 1
     let zIndex = pokemonZIndex
 
