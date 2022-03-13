@@ -254,18 +254,17 @@ def get_args(access_config=None):
                         help='Play cries for pokemon notifications.',
                         action='store_true', default=False)
 
-    parser.add_argument('-hp', '--highlight-pokemon',
-                        help='Highlight high level, high IV and perfect IV pokemon on the map.',
-                        action='store_true', default=False)
-    parser.add_argument('-hplc', '--highlight-highlevel-color',
-                        help='Color for high level (>27) pokemon. Set to None to not highlight.',
-                        default='green')
-    parser.add_argument('-hpic', '--highlight-highiv-color',
-                        help='Color for high IV (>=90) pokemon. Set to None to not highlight.',
-                        default='red')
-    parser.add_argument('-hppc', '--highlight-perfect-color',
-                        help='Color for perfect IV (=100) pokemon. Set to None to not highlight.',
+    parser.add_argument('-hp', '--highlight-pokemon', default='',
+                        help='Highlight pokemon on the map using the stated way. Options: server / svg / css')
+    parser.add_argument('-hpcp', '--highlight-color-perfect',
+                        help='Color for perfect IV pokemon. Set to None to not highlight. Important for highlight type "server". ',
                         default='purple')
+    parser.add_argument('-hpci', '--highlight-color-iv',
+                        help='Color for high IV pokemon. Set to None to not highlight. Important for highlight type "server". ',
+                        default='red')
+    parser.add_argument('-hpcl', '--highlight-color-level',
+                        help='Color for high level pokemon. Set to None to not highlight. Important for highlight type "server". ',
+                        default='green')
     parser.add_argument('-hpc', '--highlight-perfect-circle',
                         help='Add circle symbol with "100" similar to the weather one for perfect IV pokemon.',
                         action='store_true', default=False)
@@ -655,9 +654,9 @@ def get_args(access_config=None):
             'show_all_zoom_level',
             'pokemon_cries',
             'highlight_pokemon',
-            'highlight_highlevel_color',
-            'highlight_highiv_color',
-            'highlight_perfect_color',
+            'highlight_color_perfect',
+            'highlight_color_iv',
+            'highlight_color_level',
             'highlight_perfect_circle',
             'no_gyms',
             'no_gym_sidebar',

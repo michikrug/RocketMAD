@@ -5,7 +5,7 @@ pokemonNotifiedZIndex, pokemonRareZIndex, pokemonUltraRareZIndex,
 pokemonUncommonZIndex, pokemonVeryRareZIndex, pokemonZIndex, removeMarker,
 removeRangeCircle, sendNotification, settings, setupRangeCircle,
 updateRangeCircle, weatherClassesDay, weatherNames, updateMarkerLayer,
-createPokemonMarker, filterManagers
+createPokemonMarker, filterManagers, serverSettings
 */
 /* exported processPokemon, updatePokemons */
 
@@ -83,23 +83,25 @@ function customizePokemonMarker(pokemon, marker, isNotifPokemon) {
 }
 
 function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
+    const icon = marker.options.icon
+
     let iconSize = 32 * (settings.pokemonIconSizeModifier / 100)
     let upscaleModifier = 1
     let zIndex = pokemonZIndex
 
-    if (settings.scaleByValues) {
-        if (pokemon.individual_attack) {
-            const ivsPercentage = getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina)
-            if (ivsPercentage === 100) {
-                iconSize *= 1.5
-                zIndex = pokemonNewSpawnZIndex
-            } else if (ivsPercentage >= 90) {
-                iconSize *= 1.25
-                zIndex = pokemonUltraRareZIndex
-            }
+    const ivs = pokemon.individual_attack ? getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina) : 0
+    const lvl = pokemon.cp_multiplier ? getPokemonLevel(pokemon.cp_multiplier) : 0
+
+    if (settings.highlightPokemon && settings.scaleByValues) {
+        if (ivs === 100) {
+            iconSize *= 1.7
+            zIndex = pokemonNewSpawnZIndex
+        } else if (ivs >= settings.highlightThresholdIV) {
+            iconSize *= 1.3
+            zIndex = pokemonUltraRareZIndex
         }
-        if (pokemon.cp_multiplier && getPokemonLevel(pokemon.cp_multiplier) > 27) {
-            iconSize *= 1.1
+        if (lvl >= settings.highlightThresholdLevel) {
+            iconSize *= 1.2
         }
     }
 
@@ -129,7 +131,21 @@ function updatePokemonMarker(pokemon, marker, isNotifPokemon) {
 
     iconSize *= upscaleModifier
 
-    const icon = marker.options.icon
+    icon.options.shadowUrl = null
+    icon.options.shadowSize = null
+    icon.options.className = null
+    if (['css', 'svg'].includes(serverSettings.highlightPokemon) && settings.highlightPokemon) {
+        const type = ivs === 100 ? 'Perfect' : ivs >= settings.highlightThresholdIV ? 'IV' : lvl >= settings.highlightThresholdLevel ? 'Level' : ''
+        if (type && settings[`highlightColor${type}`]) {
+            if (serverSettings.highlightPokemon === 'svg') {
+                icon.options.shadowUrl = `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150"><circle style="fill:${settings[`highlightColor${type}`]};filter:blur(${settings.highlightRadius}px)" cx="75" cy="75" r="${settings.highlightSize}"/></svg>`
+                icon.options.shadowSize = [iconSize * 2, iconSize * 2]
+            } else if (serverSettings.highlightPokemon === 'css') {
+                icon.options.className = `marker-highlight-${type.toLowerCase()}`
+            }
+        }
+    }
+
     icon.options.iconSize = [iconSize, iconSize]
     marker.setIcon(icon)
 

@@ -1,4 +1,7 @@
 /*
+globals serverSettings, version, i18n
+*/
+/*
 exported genderClasses, getIvsPercentage, getIvsPercentageCssColor,
 getMoveName, getMoveType, getMoveTypeNoI8ln, getPokemonGen, getPokemonIds,
 getPokemonLevel, getPokemonNameWithForm, getPokemonRarity,
@@ -25,7 +28,7 @@ function initPokemonData() {
     return $.getJSON('static/dist/data/pokemon.min.json?v=' + version).done(function (data) {
         pokemonData = data
         $.each(pokemonData, function (id, value) {
-            let gen
+            let gen = 1
             if (id <= 151) {
                 gen = 1
             } else if (id <= 251) {
@@ -201,9 +204,13 @@ function getPokemonMapIconUrl(pokemon, generateImages) {
     const costumeParam = pokemon.costume ? `&costume=${pokemon.costume}` : ''
     const evolutionParam = pokemon.evolution ? `&evolution=${pokemon.evolution}` : ''
     const weatherParam = pokemon.weather_boosted_condition ? `&weather=${pokemon.weather_boosted_condition}` : ''
-    const ivs = pokemon.individual_attack ? getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina) : 0
-    const lvl = pokemon.cp_multiplier ? getPokemonLevel(pokemon.cp_multiplier) : 0
-    const modifierParam = ivs === 100 ? '&modifier=perfect' : ivs >= 90 ? '&modifier=highiv' : lvl > 27 ? '&modifier=highlevel' : ''
+    let modifierParam = ''
+    const serverSide = serverSettings.highlightPokemon === 'server'
+    if (serverSide || serverSettings.highlightPerfectCircle) {
+        const ivs = pokemon.individual_attack ? getIvsPercentage(pokemon.individual_attack, pokemon.individual_defense, pokemon.individual_stamina) : 0
+        const lvl = pokemon.cp_multiplier ? getPokemonLevel(pokemon.cp_multiplier) : 0
+        modifierParam = ivs === 100 ? '&modifier=perfect' : serverSide && ivs >= settings.highlightThresholdIV ? '&modifier=highiv' : serverSide && lvl >= settings.highlightThresholdLevel ? '&modifier=highlevel' : ''
+    }
     return `pkm_img?pkm=${pokemon.pokemon_id}${genderParam}${formParam}${costumeParam}${evolutionParam}${weatherParam}${modifierParam}`
 }
 
