@@ -110,12 +110,6 @@ raid_colors = {
 font = path_static / 'Arial Black.ttf'
 font_pointsize = 25
 
-highlight_colors = {
-    'perfect': args.highlight_color_perfect.lower(),
-    'highiv': args.highlight_color_iv.lower(),
-    'highlevel': args.highlight_color_level.lower()
-}
-
 
 class ImageGenerator:
     # Will be set during config parsing
