@@ -387,36 +387,62 @@ function initSettingsSidebar() {
                 Store.set('highlightPokemon', this.checked)
             })
 
-            if (serverSettings.highlightPokemon !== 'server') {
-                $('#highlight-color-perfect').on('change', function () {
-                    settings.highlightColorPerfect = this.value
-                    document.documentElement.style.setProperty('--color-perfect', this.value)
-                    updatePokemons()
-                    Store.set('highlightColorPerfect', this.value)
-                })
+            $('#highlight-color-perfect').on('change', function () {
+                settings.highlightColorPerfect = this.value
+                document.documentElement.style.setProperty('--color-perfect', this.value)
+                updatePokemons()
+                Store.set('highlightColorPerfect', this.value)
+            })
 
-                $('#highlight-color-iv').on('change', function () {
-                    settings.highlightColorIV = this.value
-                    document.documentElement.style.setProperty('--color-iv', this.value)
-                    updatePokemons()
-                    Store.set('highlightColorIV', this.value)
-                })
+            $('#highlight-color-iv').on('change', function () {
+                settings.highlightColorIV = this.value
+                document.documentElement.style.setProperty('--color-iv', this.value)
+                updatePokemons()
+                Store.set('highlightColorIV', this.value)
+            })
 
-                $('#highlight-color-level').on('change', function () {
-                    settings.highlightColorLevel = this.value
-                    document.documentElement.style.setProperty('--color-level', this.value)
-                    updatePokemons()
-                    Store.set('highlightColorLevel', this.value)
-                })
+            $('#highlight-color-level').on('change', function () {
+                settings.highlightColorLevel = this.value
+                document.documentElement.style.setProperty('--color-level', this.value)
+                updatePokemons()
+                Store.set('highlightColorLevel', this.value)
+            })
 
-                var highlightRadiusSlider = document.getElementById('highlight-radius-slider')
-                noUiSlider.create(highlightRadiusSlider, {
-                    start: [settings.highlightRadius],
+            var highlightRadiusSlider = document.getElementById('highlight-radius-slider')
+            noUiSlider.create(highlightRadiusSlider, {
+                start: [settings.highlightRadius],
+                connect: 'lower',
+                step: 1,
+                range: {
+                    min: 0,
+                    max: 30
+                },
+                format: {
+                    to: function (value) {
+                        return Math.round(value)
+                    },
+                    from: function (value) {
+                        return Number(value)
+                    }
+                }
+            })
+            highlightRadiusSlider.noUiSlider.on('change', function () {
+                settings.highlightRadius = this.get()
+                $('#highlight-radius-slider-title').text(`${i18n('Blur Radius')} (${settings.highlightRadius}px)`)
+                document.documentElement.style.setProperty('--blur-radius', `${settings.highlightRadius}px`)
+                updatePokemons()
+                Store.set('highlightRadius', settings.highlightRadius)
+            })
+
+            if (serverSettings.highlightPokemon === 'svg') {
+                var highlightSizeSlider = document.getElementById('highlight-size-slider')
+                noUiSlider.create(highlightSizeSlider, {
+                    start: [settings.highlightSize],
                     connect: 'lower',
                     step: 1,
                     range: {
-                        min: 0,
-                        max: 30
+                        min: 10,
+                        max: 50
                     },
                     format: {
                         to: function (value) {
@@ -427,40 +453,12 @@ function initSettingsSidebar() {
                         }
                     }
                 })
-                highlightRadiusSlider.noUiSlider.on('change', function () {
-                    settings.highlightRadius = this.get()
-                    $('#highlight-radius-slider-title').text(`${i18n('Blur Radius')} (${settings.highlightRadius}px)`)
-                    document.documentElement.style.setProperty('--blur-radius', `${settings.highlightRadius}px`)
+                highlightSizeSlider.noUiSlider.on('change', function () {
+                    settings.highlightSize = this.get()
+                    $('#highlight-size-slider-title').text(`${i18n('Circle Size')} (${settings.highlightSize})`)
                     updatePokemons()
-                    Store.set('highlightRadius', settings.highlightRadius)
+                    Store.set('highlightSize', settings.highlightSize)
                 })
-
-                if (serverSettings.highlightPokemon === 'svg') {
-                    var highlightSizeSlider = document.getElementById('highlight-size-slider')
-                    noUiSlider.create(highlightSizeSlider, {
-                        start: [settings.highlightSize],
-                        connect: 'lower',
-                        step: 1,
-                        range: {
-                            min: 10,
-                            max: 50
-                        },
-                        format: {
-                            to: function (value) {
-                                return Math.round(value)
-                            },
-                            from: function (value) {
-                                return Number(value)
-                            }
-                        }
-                    })
-                    highlightSizeSlider.noUiSlider.on('change', function () {
-                        settings.highlightSize = this.get()
-                        $('#highlight-size-slider-title').text(`${i18n('Circle Size')} (${settings.highlightSize})`)
-                        updatePokemons()
-                        Store.set('highlightSize', settings.highlightSize)
-                    })
-                }
             }
 
             var highlightIvSlider = document.getElementById('highlight-iv-slider')
@@ -1601,20 +1599,18 @@ function initSettingsSidebar() {
         if (serverSettings.highlightPokemon) {
             $('#pokemon-highlight-switch').prop('checked', settings.highlightPokemon)
             $('#highlight-pokemon-wrapper').toggle(settings.highlightPokemon)
-            $('#highlight-iv-slider-title').text(`${i18n('min. IVs')} (${settings.highlightThresholdIV}%)`)
-            $('#highlight-level-slider-title').text(`${i18n('min. Level')} (L${settings.highlightThresholdLevel})`)
+            $('#highlight-iv-slider-title').text(`${i18n('min. Highlight IVs')} (${settings.highlightThresholdIV}%)`)
+            $('#highlight-level-slider-title').text(`${i18n('min. Highlight Level')} (L${settings.highlightThresholdLevel})`)
             $('#scale-values-switch').prop('checked', settings.scaleByValues)
-            if (serverSettings.highlightPokemon !== 'server') {
-                if (serverSettings.highlightPokemon === 'svg') {
-                    $('#highlight-size-slider-title').text(`${i18n('Circle Size')} (${settings.highlightSize})`)
-                }
-                $('#highlight-radius-slider-title').text(`${i18n('Blur Radius')} (${settings.highlightRadius}px)`)
-                $('#highlight-color-perfect').val(settings.highlightColorPerfect)
-                document.documentElement.style.setProperty('--color-perfect', settings.highlightColorPerfect)
-                $('#highlight-color-iv').val(settings.highlightColorIV)
-                document.documentElement.style.setProperty('--color-iv', settings.highlightColorIV)
-                $('#highlight-color-level').val(settings.highlightColorLevel)
-                document.documentElement.style.setProperty('--color-level', settings.highlightColorLevel)
+            $('#highlight-radius-slider-title').text(`${i18n('Blur Radius')} (${settings.highlightRadius}px)`)
+            $('#highlight-color-perfect').val(settings.highlightColorPerfect)
+            document.documentElement.style.setProperty('--color-perfect', settings.highlightColorPerfect)
+            $('#highlight-color-iv').val(settings.highlightColorIV)
+            document.documentElement.style.setProperty('--color-iv', settings.highlightColorIV)
+            $('#highlight-color-level').val(settings.highlightColorLevel)
+            document.documentElement.style.setProperty('--color-level', settings.highlightColorLevel)
+            if (serverSettings.highlightPokemon === 'svg') {
+                $('#highlight-size-slider-title').text(`${i18n('Circle Size')} (${settings.highlightSize})`)
             }
         }
     }
