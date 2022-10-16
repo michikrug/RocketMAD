@@ -58,7 +58,8 @@ egg_images = {
     5: path_gym / 'egg_legendary.png',
     6: path_gym / 'egg_mega.png',
     7: path_gym / 'egg_legendary_mega.png',
-    8: path_gym / 'ultra_wormhole.png'
+    8: path_gym / 'ultra_wormhole.png',
+    9: path_gym / 'egg_elite.png'
 }
 
 weather_images = {
@@ -108,7 +109,8 @@ raid_colors = {
     5: "\"rgb(184,165,221)\"",
     6: "\"rgb(141,54,40)\"",
     7: "\"rgb(90,132,132)\"",
-    8: "\"rgb(184,165,221)\""
+    8: "\"rgb(184,165,221)\"",
+    9: "\"rgb(210,60,60)\""
 }
 
 font = path_static / 'Arial Black.ttf'
