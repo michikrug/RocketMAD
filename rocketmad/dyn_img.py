@@ -311,7 +311,7 @@ class ImageGenerator:
                                                     evolution))
             im_lines.extend(self._draw_raid_level(raid_level))
             if 11 <= raid_level <= 15:
-                im_lines.extend(self._draw_shadow_raid_effect())
+              im_lines.extend(self._draw_shadow_raid_effect())
             if level > 0:
                 im_lines.extend(self._draw_gym_level(level, team))
         elif raid_level > 0:

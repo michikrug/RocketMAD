@@ -133,7 +133,11 @@ def create_app():
     if args.cors:
         CORS(app)
 
-    db_uri = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(
+    if args.db_socket:
+        db_uri = 'mysql+pymysql://{}:{}@localhost/{}?charset=utf8mb4&unix_socket={}'.format(
+        args.db_user, args.db_pass, args.db_name, args.db_socket)
+    else:
+        db_uri = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.format(
         args.db_user, args.db_pass, args.db_host, args.db_port, args.db_name)
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -756,6 +760,8 @@ def create_app():
         eventless_pokestops = request.args.get('eventlessPokestops') == 'true'
         quests = (request.args.get('quests') == 'true'
                   and not user_args.no_quests)
+        quests_ar = (request.args.get('questsAr') == 'true'
+                  and not user_args.no_quests)
         invasions = (request.args.get('invasions') == 'true'
                      and not user_args.no_invasions)
         lures = request.args.get('lures') == 'true' and not user_args.no_lures
@@ -904,14 +910,14 @@ def create_app():
             if timestamp == 0 or all_pokestops:
                 d['pokestops'] = Pokestop.get_pokestops(
                     swLat, swLng, neLat, neLng,
-                    eventless_stops=eventless_pokestops, quests=quests,
+                    eventless_stops=eventless_pokestops, quests=quests, quests_ar=quests_ar,
                     invasions=invasions, lures=lures, geofences=geofences,
                     exclude_geofences=exclude_geofences
                 )
             else:
                 d['pokestops'] = Pokestop.get_pokestops(
                     swLat, swLng, neLat, neLng, timestamp=timestamp,
-                    eventless_stops=eventless_pokestops, quests=quests,
+                    eventless_stops=eventless_pokestops, quests=quests, quests_ar=quests_ar,
                     invasions=invasions, lures=lures, geofences=geofences,
                     exclude_geofences=exclude_geofences
                 )
@@ -919,7 +925,7 @@ def create_app():
                     d['pokestops'].extend(Pokestop.get_pokestops(
                         swLat, swLng, neLat, neLng, oSwLat=oSwLat,
                         oSwLng=oSwLng, oNeLat=oNeLat, oNeLng=oNeLng,
-                        eventless_stops=eventless_pokestops, quests=quests,
+                        eventless_stops=eventless_pokestops, quests=quests, quests_ar=quests_ar,
                         invasions=invasions, lures=lures, geofences=geofences,
                         exclude_geofences=exclude_geofences
                     ))
