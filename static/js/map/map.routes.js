@@ -20,7 +20,7 @@ function setupRouteMarker(route, start = true) {
     const marker = L.marker([lat, lng])
     marker.start = start
     marker.route_id = route.route_id
-    updateRouteMarker(route, marker)
+    updateRouteMarker(marker)
     marker.bindPopup('', { autoPan: autoPanPopup() })
     addListeners(marker, 'route')
     updateRouteLabel(route, marker)
@@ -35,7 +35,7 @@ function updateRouteMarker(marker) {
         iconUrl: `static/images/routes/route_${marker.start ? 'start' : 'end'}.png`,
         iconSize: [24, 24],
         iconAnchor: routeAnchor,
-        popupAnchor: [0, 0],
+        popupAnchor: [0, 0]
     })
     marker.setIcon(routeIcon)
 
@@ -204,8 +204,8 @@ function updateRoute(id, route = null) {
             }
         }
     } else {
-        updateRouteMarker(mapData.routes[id], mapData.routes[id].marker1)
-        updateRouteMarker(mapData.routes[id], mapData.routes[id].marker2)
+        updateRouteMarker(mapData.routes[id].marker1)
+        updateRouteMarker(mapData.routes[id].marker2)
         mapData.routes[id].routePath = setupRoutePath(mapData.routes[id])
     }
 
