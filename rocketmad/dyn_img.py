@@ -435,10 +435,10 @@ class ImageGenerator:
             try:
                 form_proto = PokemonDisplayProto().Form.Name(form)
                 form_name = form_proto[form_proto.index('_') + 1:]
+                if form_name not in ['NORMAL', 'SHADOW', 'PURIFIED']:
+                    form_suffix = '.f' + form_name
             except ValueError:
-                form_name = 'NORMAL'
-            if form_name not in ['NORMAL', 'SHADOW', 'PURIFIED']:
-                form_suffix = '.f' + form_name
+                pass
         else:
             default_form = get_pokemon_data(pkm).get('defaultFormId')
             if default_form:
@@ -446,8 +446,11 @@ class ImageGenerator:
                     pkm, gender, int(default_form), costume, evolution, shiny)
 
         costume_suffix = ''
-        if costume > 0:
-            costume_suffix = '.c' + PokemonDisplayProto().Costume.Name(costume)
+        try:
+            if costume > 0:
+                costume_suffix = '.c' + PokemonDisplayProto().Costume.Name(costume)
+        except ValueError:
+            pass
 
         gender_suffix = '.g2' if gender == FEMALE else ''
         shiny_suffix = '.s' if shiny else ''
