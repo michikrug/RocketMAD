@@ -432,8 +432,11 @@ class ImageGenerator:
         if evolution != EVOLUTION_UNSET:
             form_suffix = '.f' + evolution_suffixes[evolution]
         elif form > 0:
-            form_proto = PokemonDisplayProto().Form.Name(form)
-            form_name = form_proto[form_proto.index('_') + 1:]
+            try:
+                form_proto = PokemonDisplayProto().Form.Name(form)
+                form_name = form_proto[form_proto.index('_') + 1:]
+            except ValueError:
+                form_name = 'NORMAL'
             if form_name not in ['NORMAL', 'SHADOW', 'PURIFIED']:
                 form_suffix = '.f' + form_name
         else:
