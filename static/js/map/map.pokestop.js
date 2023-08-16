@@ -13,9 +13,9 @@ function isPokestopMeetsQuestFilters(pokestop) {
     if (!settings.showQuests || !pokestop.quest) {
         return false
     }
-    if ((settings.filterQuestsAr && pokestop.quest.layer == 0)
-      || (!settings.filterQuestsAr && pokestop.quest.layer == 1)) {
-      return false
+    if ((settings.filterQuestsAr && pokestop.quest.layer === 0) ||
+      (!settings.filterQuestsAr && pokestop.quest.layer === 1)) {
+        return false
     }
 
     if (settings.filterQuests) {
@@ -35,7 +35,7 @@ function isPokestopMeetsQuestFilters(pokestop) {
             case 4: {
                 const id = '8_' + pokestop.quest.item_amount
                 return !settings.excludedQuestItems.has(id)
-			}
+            }
             case 7: {
                 return !settings.excludedQuestPokemon.has(pokestop.quest.pokemon_id) &&
                 (settings.questFormFilter === 'Any' || settings.questFormFilter === getFormName(pokestop.quest.pokemon_id, pokestop.quest.form_id))
@@ -643,11 +643,13 @@ function getPokestopNotificationInfo(pokestop) {
                     }
                     break
                 }
-                case 4:
+                case 4: {
                     const itemId = '8_' + pokestop.quest.item_amount
                     if (settings.notifQuestItems.has(itemId)) {
                         questNotif = true
                     }
+                    break
+                }
                 case 7: {
                     if (settings.notifQuestPokemon.has(pokestop.quest.pokemon_id)) {
                         questNotif = true

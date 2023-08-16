@@ -1,5 +1,5 @@
 /* globals addListeners, autoPanPopup, mapData, markers, settings,
-   updateMarkerLayer, pokestopQuestZIndex, pokestopZIndex
+   pokestopQuestZIndex, pokestopZIndex
  */
 /* exported processRoute, removeRoutes, updateRouteLabel */
 
@@ -24,7 +24,6 @@ function setupRouteMarker(route, start = true) {
     marker.bindPopup('', { autoPan: autoPanPopup() })
     addListeners(marker, 'route')
     updateRouteLabel(route, marker)
-
     markers.addLayer(marker)
 
     return marker
@@ -49,53 +48,54 @@ function updateRouteMarker(marker) {
 }
 
 function addPopup(route, marker, color) {
-    const popupContent = `<div>
-                            <div class='title'>
-                              ${route.name}
-                            </div>
-                            <hr style="height:5px;border-width:0;color:${color};background-color:${color}">
-                            <div>
-                              ${i18n('Distance')}: <strong>${route.route_distance_meters} ${i18n('meters')}</strong>
-                            </div>
-                            <div>
-                              ${i18n('Duration')}: <strong>${route.route_duration_seconds} ${i18n('seconds')}</strong>
-                            </div>
-                            <div>
-                              ${i18n('Reversible')}: <strong>${route.reversible}</strong>
-                            </div>
-                          </div>`
+    const popupContent = `
+        <div>
+          <div class='title'>
+            ${route.name}
+          </div>
+          <hr style="height:5px;border-width:0;color:${color};background-color:${color}">
+          <div>
+            ${i18n('Distance')}: <strong>${route.route_distance_meters} ${i18n('meters')}</strong>
+          </div>
+          <div>
+            ${i18n('Duration')}: <strong>${route.route_duration_seconds} ${i18n('seconds')}</strong>
+          </div>
+          <div>
+            ${i18n('Reversible')}: <strong>${route.reversible}</strong>
+          </div>
+        </div>`
+
     marker.bindPopup(popupContent, { autoPan: autoPanPopup() })
 
     marker.on('mouseover', function (e) {
         this.openPopup(e.latlng)
-        this.setStyle({
-            weight: 6
-        })
+        this.setStyle({ weight: 6 })
     })
+
     marker.on('mouseout', function (e) {
         this.closePopup()
-        this.setStyle({
-            weight: 3
-        })
+        this.setStyle({ weight: 3 })
     })
 }
 
 function setupRoutePath(route) {
     const routePoints = []
 
-    const colorTable = ['#DA051B',
-                        '#E84921',
-                        '#EF7D1D',
-                        '#F8B310',
-                        '#F3E500',
-                        '#8EB71B',
-                        '#229548',
-                        '#0094AA',
-                        '#1F4995',
-                        '#172C85',
-                        '#4F2577',
-                        '#A0077C',
-                        '#F5B3F9']
+    const colorTable = [
+        '#DA051B',
+        '#E84921',
+        '#EF7D1D',
+        '#F8B310',
+        '#F3E500',
+        '#8EB71B',
+        '#229548',
+        '#0094AA',
+        '#1F4995',
+        '#172C85',
+        '#4F2577',
+        '#A0077C',
+        '#F5B3F9'
+    ]
 
     const wp = JSON.parse(route.waypoints)
     for (let i = 0; i < wp.length; i++) {
@@ -111,12 +111,12 @@ function setupRoutePath(route) {
         _originalInitialize: L.Polyline.prototype.initialize,
 
         initialize: function (bounds, options) {
-            this._originalInitialize(bounds, options);
-            this._latlng = this.getBounds().getCenter();
+            this._originalInitialize(bounds, options)
+            this._latlng = this.getBounds().getCenter()
         },
 
         getLatLng: function () {
-            return this._latlng;
+            return this._latlng
         },
 
         // dummy method.
@@ -124,7 +124,7 @@ function setupRoutePath(route) {
         }
     })
 
-    const colorIdx = parseInt(route.route_id.slice(-5,-3),16)%13
+    const colorIdx = parseInt(route.route_id.slice(-5, -3), 16) % 13
     const routePath = new L.ClusterablePolyline(routePoints, {
         color: colorTable[colorIdx],
         weight: 3,
@@ -213,9 +213,7 @@ function processRoute(route) {
 }
 
 function removeRoutes() {
-    $.each(mapData.routes, function (id, route) {
-        removeRoute(id)
-    })
+    $.each(mapData.routes, (id) => removeRoute(id))
 }
 
 function removeRoute(id) {

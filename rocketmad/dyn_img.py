@@ -437,8 +437,12 @@ class ImageGenerator:
                 form_name = form_proto[form_proto.index('_') + 1:]
                 if form_name not in ['NORMAL', 'SHADOW', 'PURIFIED']:
                     form_suffix = '.f' + form_name
-            except ValueError:
-                pass
+            except ValueError as e:
+                log.error(f"Error getting form from protos: {e}")
+                default_form = get_pokemon_data(pkm).get('defaultFormId')
+                if default_form:
+                    return self._get_unity_pokemon_asset_path(
+                        pkm, gender, int(default_form), costume, evolution, shiny)
         else:
             default_form = get_pokemon_data(pkm).get('defaultFormId')
             if default_form:
