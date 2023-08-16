@@ -1,7 +1,7 @@
 /* globals addListeners, autoPanPopup, mapData, markers, settings,
    updateMarkerLayer, pokestopQuestZIndex, pokestopZIndex
  */
-/* exported processRoute, updateRoutes, updateRouteLabel */
+/* exported processRoute, removeRoutes, updateRouteLabel */
 
 function setupRouteMarker(route, start = true) {
     /* create marker for start point (start = true)
@@ -25,6 +25,8 @@ function setupRouteMarker(route, start = true) {
     addListeners(marker, 'route')
     updateRouteLabel(route, marker)
 
+    markers.addLayer(marker)
+
     return marker
 }
 
@@ -32,8 +34,8 @@ function updateRouteMarker(marker) {
     const routeIcon = L.icon({
         iconUrl: `static/images/routes/route_${marker.start ? 'start' : 'end'}.png`,
         iconSize: [24, 24],
-        iconAnchor: marker.start ? [-12, 20] : [-12, 12],
-        popupAnchor: marker.start ? [24, -5] : [24, 3]
+        iconAnchor: marker.start ? [12, 20] : [12, 12],
+        popupAnchor: marker.start ? [0, -5] : [0, 3]
     })
     marker.setIcon(routeIcon)
 
@@ -43,13 +45,57 @@ function updateRouteMarker(marker) {
         marker.setZIndexOffset(pokestopZIndex)
     }
 
-    updateMarkerLayer(marker, false, {})
-
     return marker
+}
+
+function addPopup(route, marker, color) {
+    const popupContent = `<div>
+                            <div class='title'>
+                              ${route.name}
+                            </div>
+                            <hr style="height:5px;border-width:0;color:${color};background-color:${color}">
+                            <div>
+                              ${i18n('Distance')}: <strong>${route.route_distance_meters} ${i18n('meters')}</strong>
+                            </div>
+                            <div>
+                              ${i18n('Duration')}: <strong>${route.route_duration_seconds} ${i18n('seconds')}</strong>
+                            </div>
+                            <div>
+                              ${i18n('Reversible')}: <strong>${route.reversible}</strong>
+                            </div>
+                          </div>`
+    marker.bindPopup(popupContent, { autoPan: autoPanPopup() })
+
+    marker.on('mouseover', function (e) {
+        this.openPopup(e.latlng)
+        this.setStyle({
+            weight: 6
+        })
+    })
+    marker.on('mouseout', function (e) {
+        this.closePopup()
+        this.setStyle({
+            weight: 3
+        })
+    })
 }
 
 function setupRoutePath(route) {
     const routePoints = []
+
+    const colorTable = ['#DA051B',
+                        '#E84921',
+                        '#EF7D1D',
+                        '#F8B310',
+                        '#F3E500',
+                        '#8EB71B',
+                        '#229548',
+                        '#0094AA',
+                        '#1F4995',
+                        '#172C85',
+                        '#4F2577',
+                        '#A0077C',
+                        '#F5B3F9']
 
     const wp = JSON.parse(route.waypoints)
     for (let i = 0; i < wp.length; i++) {
@@ -78,13 +124,14 @@ function setupRoutePath(route) {
         }
     })
 
+    const colorIdx = parseInt(route.route_id.slice(-5,-3),16)%13
     const routePath = new L.ClusterablePolyline(routePoints, {
-        color: '#999999',
+        color: colorTable[colorIdx],
         weight: 3,
         smoothFactor: 1
     })
     routePath.route_id = route.route_id
-
+    addPopup(route, routePath, colorTable[colorIdx])
     markers.addLayer(routePath)
 
     return routePath
@@ -155,69 +202,23 @@ function processRoute(route) {
     }
 
     const id = route.route_id
-    if (!(id in mapData.routes)) {
-        route.marker1 = setupRouteMarker(route)
-        route.marker2 = setupRouteMarker(route, false)
-        route.routePath = setupRoutePath(route)
-        mapData.routes[id] = route
-    } else {
-        updateRoute(id, route)
-    }
+
+    removeRoute(id)
+    route.marker1 = setupRouteMarker(route)
+    route.marker2 = setupRouteMarker(route, false)
+    route.routePath = setupRoutePath(route)
+    mapData.routes[id] = route
 
     return true
 }
 
-function updateRoute(id, route = null) {
-    if (id == null || !(id in mapData.routes)) {
-        return true
-    }
-
-    const isRouteNull = route === null
-    if (isRouteNull) {
-        route = mapData.routes[id]
-    }
-
-    if (!settings.showRoutes) {
-        removeRoute(route)
-        return true
-    }
-
-    if (!isRouteNull) {
-        mapData.routes[id] = route
-
-        if (route.marker1) {
-            if (route.marker1.isPopupOpen()) {
-                updateRouteLabel(route, route.marker1)
-            } else {
-                // Make sure label is updated next time it's opened.
-                route.marker1.updated = true
-            }
-        }
-        if (route.marker2) {
-            if (route.marker2.isPopupOpen()) {
-                updateRouteLabel(route, route.marker2)
-            } else {
-                // Make sure label is updated next time it's opened.
-                route.marker2.updated = true
-            }
-        }
-    } else {
-        updateRouteMarker(mapData.routes[id].marker1)
-        updateRouteMarker(mapData.routes[id].marker2)
-        mapData.routes[id].routePath = setupRoutePath(mapData.routes[id])
-    }
-
-    return true
-}
-
-function updateRoutes() {
+function removeRoutes() {
     $.each(mapData.routes, function (id, route) {
-        updateRoute(id)
+        removeRoute(id)
     })
 }
 
-function removeRoute(route) {
-    const id = route.route_id
+function removeRoute(id) {
     if (id in mapData.routes) {
         if (mapData.routes[id].marker1) {
             markers.removeLayer(mapData.routes[id].marker1)
