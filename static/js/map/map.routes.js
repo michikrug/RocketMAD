@@ -88,7 +88,7 @@ function addPopup(route, marker) {
     })
     marker.on('mousemove', function (e) {
         this.closePopup()
-        this.openPopup(e.latlng)
+        this.openPopup(map.mouseEventToLatLng(e.originalEvent))
         this.setStyle({
             weight: 6
         })
@@ -116,7 +116,7 @@ function setupRoutePath(route) {
 
         initialize: function (bounds, options) {
             this._originalInitialize(bounds, options)
-            // this._latlng = this.getBounds().getCenter();
+            this._latlng = this.getBounds().getCenter()
         },
 
         // dummy method.
@@ -144,6 +144,8 @@ function routeLabel(route, marker) {
         iconUrl = `static/images/routes/route_${marker.start ? 'start' : 'end'}.png`
         routeTitle = `Route ${marker.start ? 'start' : 'end'}`
     }
+    const rDS = parseInt(route.route_duration_seconds)
+    const duration = `${Math.floor(rDS / 3600)}h ${String(Math.floor((rDS % 3600) / 60)).padStart(2, '0')}m ${String(Math.floor(rDS % 60)).padStart(2, '0')}s`
 
     const color = getRouteColor(route)
     const routeDisplay = `
@@ -163,7 +165,7 @@ function routeLabel(route, marker) {
                 ${i18n('Distance')}: <strong>${route.route_distance_meters} ${i18n('meters')}</strong>
               </div>
               <div>
-                ${i18n('Duration')}: <strong>${route.route_duration_seconds} ${i18n('seconds')}</strong>
+                ${i18n('Duration')}: <strong>${duration}</strong>
               </div>
               <div>
                 ${i18n('Reversible')}: <strong>${route.reversible}</strong>
