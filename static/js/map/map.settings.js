@@ -1538,7 +1538,7 @@ function initSettingsSidebar() {
 
     $('#settings-file-input').on('change', function () {
         function loaded(e) {
-            const confirmed = confirm('Are you sure you want to import settings?')
+            const confirmed = confirm(i18n('Are you sure you want to import settings?'))
             if (!confirmed) {
                 return
             }
@@ -1563,7 +1563,7 @@ function initSettingsSidebar() {
     })
 
     $('#load-settings-select').on('change', function () {
-        const confirmed = confirm(`Are you sure you want to load the saved settings "${this.value}" and replace all current ones?`)
+        const confirmed = confirm(`${i18n('Are you sure you want to load the saved settings')} "${this.value}" ${i18n('and replace all current ones?')}`)
         if (confirmed) {
             Store.restore(JSON.parse(settings.savedSettings[this.value]))
             window.location.reload()
@@ -1571,7 +1571,7 @@ function initSettingsSidebar() {
     })
 
     $('#delete-settings-select').on('change', function () {
-        const confirmed = confirm(`Are you sure you want to delete the saved settings named "${this.value}"?`)
+        const confirmed = confirm(`${i18n('Are you sure you want to delete the saved settings named')} "${this.value}"?`)
         if (confirmed) {
             delete settings.savedSettings[this.value]
             Store.set('savedSettings', settings.savedSettings)
@@ -1580,7 +1580,7 @@ function initSettingsSidebar() {
     })
 
     $('#save-settings-button').on('click', function () {
-        const settingsName = prompt('Please state a name for this set of settings (saved settings with the same name will be overwritten):', 'Setting1')
+        const settingsName = prompt(i18n('Please state a name for this set of settings (saved settings with the same name will be overwritten):'), 'Setting1')
         settings.savedSettings[settingsName.replaceAll(/[^\w-_ ]/gi, '')] = JSON.stringify(Store.dump())
         Store.set('savedSettings', settings.savedSettings)
         refreshSavedSettings()
@@ -1591,7 +1591,7 @@ function initSettingsSidebar() {
     })
 
     $('#reset-settings-button').on('click', function () {
-        const confirmed = confirm('Are you sure you want to reset all settings to default values?')
+        const confirmed = confirm(i18n('Are you sure you want to reset all settings to default values?'))
         if (confirmed) {
             localStorage.clear()
             window.location.reload()
@@ -2277,7 +2277,11 @@ function initItemFilters() {
 }
 
 function initInvasionFilters() {
-    const invasionIds = new Set([41, 42, 43, 44, 5, 4, 6, 7, 10, 11, 12, 13, 49, 50, 14, 15, 16, 17, 18, 19, 20, 21, 47, 48, 22, 23, 24, 25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37, 28, 29, 38, 39, 352, 500, 501, 502, 504, 506, 507])
+    const invasionIds = new Set([41, 42, 43, 44, 5, 4, 6, 7, 10, 11, 12, 13,
+                                 49, 50, 14, 15, 16, 17, 18, 19, 20, 21, 47,
+                                 48, 22, 23, 24, 25, 26, 27, 30, 31, 32, 33,
+                                 34, 35, 36, 37, 28, 29, 38, 39, 352, 998,
+                                 9001, 500, 501, 502, 504, 506, 507])
 
     class InvasionFilterManager extends FilterManager {
         getListSelector() { return '.invasion-filter-list' }
