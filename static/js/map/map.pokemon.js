@@ -5,7 +5,7 @@ pokemonNotifiedZIndex, pokemonRareZIndex, pokemonUltraRareZIndex,
 pokemonUncommonZIndex, pokemonVeryRareZIndex, pokemonZIndex, removeMarker,
 removeRangeCircle, sendNotification, settings, setupRangeCircle,
 updateRangeCircle, weatherClassesDay, weatherNames, updateMarkerLayer,
-createPokemonMarker, filterManagers, serverSettings
+createPokemonMarker, filterManagers, serverSettings, getSizeDisplay
 */
 /* exported processPokemon, updatePokemons */
 
@@ -52,6 +52,10 @@ function isPokemonMeetsFilters(pokemon, isNotifPokemon) {
             // Pokemon is not encountered.
             return false
         }
+    }
+
+    if (settings.filterPokemonBySize && settings.filterPokemonBySizeOptions && !settings.filterPokemonBySizeOptions.includes(pokemon.size)) {
+        return false
     }
 
     if (settings.excludeNearbyCells && pokemon.seen_type === 'nearby_cell') {
@@ -197,6 +201,7 @@ function pokemonLabel(item) {
     var cp = item.cp
     var cpMultiplier = item.cp_multiplier
     var weatherBoostedCondition = item.weather_boosted_condition
+    var size = getSizeDisplay(item.size)
 
     var pokemonIcon = getPokemonRawIconUrl(item, serverSettings.generateImages)
     var gen = getPokemonGen(id)
@@ -208,6 +213,7 @@ function pokemonLabel(item) {
     var verifiedDisplay = ''
     var typesDisplay = ''
     var statsDisplay = ''
+    var sizeDisplay = ''
     var nearbyStopWarning = ''
 
     if (id === 29 || id === 32) {
@@ -261,8 +267,6 @@ function pokemonLabel(item) {
         var move2Name = getMoveName(item.move_2)
         var move1Type = getMoveTypeNoI8ln(item.move_1)
         var move2Type = getMoveTypeNoI8ln(item.move_2)
-        var weight = item.weight.toFixed(2)
-        var height = item.height.toFixed(2)
 
         var catchRatesDisplay = ''
         if (serverSettings.catchRates && item.catch_prob_1) {
@@ -272,6 +276,14 @@ function pokemonLabel(item) {
                   <span title='Catch rate with Great Ball' ><span class='ball-icon' ><img src='static/images/items/2.png' width='19'></span> ${(item.catch_prob_2 * 100).toFixed(1)}%</span>
                   <span title='Catch rate with Ultra Ball' ><span class='ball-icon' ><img src='static/images/items/3.png' width='19'></span> ${(item.catch_prob_3 * 100).toFixed(1)}%</span>
                 </div>`
+        }
+
+        if (size) {
+            sizeDisplay = `
+                <div>
+                    ${i18n('Size')}: <strong>${size}</strong>
+                </div>
+            `
         }
 
         statsDisplay = `
@@ -288,10 +300,8 @@ function pokemonLabel(item) {
               <div>
                ${i18n('Charge')}: <strong>${move2Name}</strong> <img class='move-type-icon' src='static/images/types/${move2Type.toLowerCase()}.png' title='${i18n(move2Type)}' width='15'>
               </div>
-              <div>
-                ${i18n('Weight')}: <strong>${weight}kg</strong> | ${i18n('Height')}: <strong>${height}m</strong>
-              </div>
               ${catchRatesDisplay}
+              ${sizeDisplay}
             </div>`
 
         let rarityDisplay = ''
