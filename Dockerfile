@@ -4,18 +4,17 @@
 #   docker run -d -P rocketmap -a ptc -u YOURUSERNAME -p YOURPASSWORD -l "Seattle, WA" -st 10 --gmaps-key CHECKTHEWIKI
 
 # Stage 0: build static assets using Node
-FROM node:18-slim
+FROM node:20-slim
 
 WORKDIR /usr/src/app
 
 COPY package.json /usr/src/app/
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
-        ca-certificates git unzip \
-        python3 \
-        build-essential\
- && npm install
+    && apt-get install -y --no-install-recommends \
+        ca-certificates python3 git unzip \
+    && npm update -g npm \
+    && npm install --no-audit
 
 COPY Gruntfile.js static01.zip /usr/src/app/
 COPY static /usr/src/app/static
@@ -24,7 +23,7 @@ COPY static /usr/src/app/static
 RUN npm run build
 
 # Stage 1: Build the actual image
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # Working directory for the application
 WORKDIR /usr/src/app
@@ -33,12 +32,12 @@ COPY requirements.txt /usr/src/app
 
 # Install app's dependencies
 RUN apt-get update \
- && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
         build-essential curl imagemagick \
- && pip install --no-cache-dir dumb-init \
- && pip install --no-cache-dir -r requirements.txt \
- && rm -rf /var/lib/apt/lists/* \
- && apt-get purge -y --auto-remove build-essential
+    && pip install --no-cache-dir dumb-init \
+    && pip install --no-cache-dir -r requirements.txt \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get purge -y --auto-remove build-essential
 
 # Default port the webserver runs on
 EXPOSE 5000
