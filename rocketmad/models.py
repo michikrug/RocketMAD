@@ -1312,10 +1312,7 @@ def db_clean_pokestops():
     db.session.commit()
 
     # Remove expired invasion data.
-    PokestopIncident.query.filter(PokestopIncident.incident_expiration < now).update(
-        dict(incident_expiration=None, incident_grunt_type=None),
-        synchronize_session="fetch"
-    )
+    PokestopIncident.query.filter(PokestopIncident.incident_expiration < now).delete(synchronize_session="fetch")
     db.session.commit()
 
     # Remove old TrsQuest entries.
