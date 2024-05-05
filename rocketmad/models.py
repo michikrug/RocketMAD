@@ -1265,7 +1265,7 @@ def db_clean_pokemons(age_hours):
     start_timer = default_timer()
 
     pokemon_timeout = datetime.utcnow() - timedelta(hours=age_hours)
-    r = Pokemon.query.filter(Pokemon.disappear_time < pokemon_timeout).delete(synchronize_session="false")
+    r = Pokemon.query.filter(Pokemon.disappear_time < pokemon_timeout).delete(synchronize_session=False)
     db.session.commit()
     log.debug('Deleted %d old Pokemon entries.', r)
 
