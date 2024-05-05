@@ -1265,7 +1265,7 @@ def db_clean_pokemons(age_hours):
     start_timer = default_timer()
 
     pokemon_timeout = datetime.utcnow() - timedelta(hours=age_hours)
-    r = Pokemon.query.filter(Pokemon.disappear_time < pokemon_timeout).delete()
+    r = Pokemon.query.filter(Pokemon.disappear_time < pokemon_timeout).delete(synchronize_session="false")
     db.session.commit()
     log.debug('Deleted %d old Pokemon entries.', r)
 
@@ -1284,13 +1284,13 @@ def db_clean_gyms(age_hours):
     rows = (
         GymDetails.query
         .filter(GymDetails.last_scanned < gym_info_timeout)
-        .delete()
+        .delete(synchronize_session="fetch")
     )
     db.session.commit()
     log.debug('Deleted %d old GymDetails entries.', rows)
 
     # Remove old Raid entries.
-    rows = Raid.query.filter(Raid.end < gym_info_timeout).delete()
+    rows = Raid.query.filter(Raid.end < gym_info_timeout).delete(synchronize_session="fetch")
     db.session.commit()
     log.debug('Deleted %d old Raid entries.', rows)
 
@@ -1306,13 +1306,15 @@ def db_clean_pokestops():
 
     # Remove expired lure data.
     Pokestop.query.filter(Pokestop.lure_expiration < now).update(
-        dict(lure_expiration=None, active_fort_modifier=None)
+        dict(lure_expiration=None, active_fort_modifier=None),
+        synchronize_session="fetch"
     )
     db.session.commit()
 
     # Remove expired invasion data.
     Pokestop.query.filter(PokestopIncident.incident_expiration < now).update(
-        dict(incident_expiration=None, incident_grunt_type=None)
+        dict(incident_expiration=None, incident_grunt_type=None),
+        synchronize_session="fetch"
     )
     db.session.commit()
 
@@ -1325,7 +1327,7 @@ def db_clean_pokestops():
     reset_timestamp = datetime.timestamp(reset_time)
     rows = TrsQuest.query.filter(
         TrsQuest.quest_timestamp < reset_timestamp
-    ).delete()
+    ).delete(synchronize_session="fetch")
     db.session.commit()
     log.debug('Deleted %d old TrsQuest entries.', rows)
 
@@ -1340,12 +1342,12 @@ def db_clean_forts(age_hours):
     fort_timeout = datetime.utcnow() - timedelta(hours=age_hours)
 
     # Remove old Gym entries.
-    rows = Gym.query.filter(Gym.last_scanned < fort_timeout).delete()
+    rows = Gym.query.filter(Gym.last_scanned < fort_timeout).delete(synchronize_session="fetch")
     db.session.commit()
     log.debug('Deleted %d old Gym entries.', rows)
 
     # Remove old Pokestop entries.
-    rows = Pokestop.query.filter(Pokestop.last_updated < fort_timeout).delete()
+    rows = Pokestop.query.filter(Pokestop.last_updated < fort_timeout).delete(synchronize_session="fetch")
     db.session.commit()
     log.debug('Deleted %d old Pokestop entries.', rows)
 
@@ -1366,7 +1368,7 @@ def db_clean_spawnpoints(age_hours):
         | TrsSpawn.last_scanned.is_(None),
         (TrsSpawn.last_non_scanned < spawnpoint_timeout)
         | TrsSpawn.last_non_scanned.is_(None)
-    ).delete()
+    ).delete(synchronize_session="fetch")
     db.session.commit()
     log.debug('Deleted %d old TrsSpawn entries.', rows)
 
