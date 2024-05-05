@@ -141,9 +141,10 @@ def create_app():
         args.db_user, args.db_pass, args.db_host, args.db_port, args.db_name)
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'pool_size': 0  # No limit.
+        'pool_size': 0,  # No limit.
+        'pool_recycle': args.db_pool_recycle,
+        'pool_pre_ping': True
     }
-    app.config['SQLALCHEMY_POOL_RECYCLE'] = args.db_pool_recycle
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
