@@ -1312,7 +1312,7 @@ def db_clean_pokestops():
     db.session.commit()
 
     # Remove expired invasion data.
-    Pokestop.query.filter(PokestopIncident.incident_expiration < now).update(
+    PokestopIncident.query.filter(PokestopIncident.incident_expiration < now).update(
         dict(incident_expiration=None, incident_grunt_type=None),
         synchronize_session="fetch"
     )
