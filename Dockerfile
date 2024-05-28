@@ -23,7 +23,7 @@ COPY static /usr/src/app/static
 RUN npm run build
 
 # Stage 1: Build the actual image
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 # Working directory for the application
 WORKDIR /usr/src/app
